@@ -1,0 +1,26 @@
+\chapter{Introduction to the \dotNET Framework}
+\label{chp:dotnet_platform}
+
+
+This chapter gives an introduction to the \dotNET Framework of Microsoft. First, the architecture of the \dotNET Framework is introduced. This section includes terms like the Common Language Runtime, the \dotNET Class Library, the Common Language Infrastructure and the Intermediate Language. These are discussed in more detail in the sections following the architecture.
+
+\nomenclature{SOAP}{Simple Object Access Protocol}%
+\nomenclature{WSDL}{Web Services Description Language}%
+\section{Introduction}
+Microsoft defines~\cite{Microsoft03-5} \dotNET as follows; ``\dotNET is the Microsoft Web services strategy to connect information, people, systems, and devices through software.''. There are different \dotNET technologies in various Microsoft products providing the capabilities to create solutions using web services. 
+Web services are small, reusable applications that help computers from many different operating system platforms work together by exchanging messages. Based on industry standards like XML (Extensible Markup Language), SOAP (Simple Object Access Protocol), and WSDL (Web Services Description Language) they provide a platform and language independent way to communicate.
+
+Microsoft products, such as Windows Server System (providing web services) or Office System (using web services) are some of the \dotNET technologies. The technology described in this chapter is the \dotNET Framework. Together with Visual Studio, an integrated development environment, they provide the developer tools to create programs for \dotNET. 
+
+Many companies are largely dependent on the \dotNET Framework, but need or want to use AOP. Currently there is no direct support for this in the Framework. The \Compose*[.NET] project is addressing these needs with its implementation of the Composition Filters approach for the \dotNET Framework.
+
+This specific \Compose* version for \dotNET has two main goals.
+First, it combines the \dotNET Framework with AOP through Composition Filters.
+Second, \Compose* offers superimposition in a language independent manner. The \dotNET Framework supports multiple languages and is, as such, suitable for this purpose.
+Composition Filters are an extension of the object-oriented mechanism as offered by \dotNET, hence the implementation is not restricted to any specific object-oriented language.
+
+\input{DotNET/ArchitectureOfDotNet}
+\input{DotNET/CommonLanguageRuntime}
+\input{DotNET/CommonLanguageInfrastructure}
+\input{DotNET/ClassLibrary}
+\input{DotNET/CommonIntermediateLanguage}

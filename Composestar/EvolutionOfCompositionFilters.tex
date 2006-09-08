@@ -1,0 +1,28 @@
+\section{Evolution of Composition Filters}
+\Compose* is the result of many years of research and experimentation.
+The following time line gives an overview of what has been done in the years before and during the \Compose* project.
+
+\begin{description}[noitemsep,style=sameline,leftmargin=15mm]
+\item[1985] The first version of Sina is developed by Mehmet Ak\c{s}it.
+            This version of Sina contains a preliminary version of the composition filters concept called semantic networks.
+            The semantic network construction serves as an extension to objects, such as classes, messages, or instances.
+            These objects can be configured to form other objects such as classes from which instances can be created.
+            The object manager takes care of synchronization and message processing of an object.
+            The semantic network construction can express key concepts like delegation, reflection, and synchronization~\cite{koopmans:sina95}.
+\item[1987] Together with Anand Tripathi of the University of Minnesota the Sina language is further developed.
+            The semantic network approach is replaced by declarative specifications and the interface predicate construct is added.
+\item[1991] The interface predicates are replaced by the dispatch filter, and the wait filter manages the synchronization functions of the object manager.
+            Message reflection and real-time specifications are handled by the meta filter and the real-time filter~\cite{bergmans:phd94}.
+\item[1995] The Sina language with Composition Filters is implemented using Smalltalk~\cite{koopmans:sina95}.
+            The implementation supports most of the filter types.
+            In the same year, a preprocessor providing C++ with support for Composition Filters is implemented~\cite{glandrup:ms95}.
+\item[1999] The composition filters language ComposeJ~\cite{wichman:ms99} is developed and implemented.
+            The implementation consists of a preprocessor capable of translating composition filter specifications into the Java language.
+\item[2001] ConcernJ is implemented as part of a \MSc thesis~\cite{salinas:ms01}.
+            ConcernJ adds the notion of superimposition to Composition Filters.
+            This allows for reuse of the filter modules and to facilitate crosscutting concerns.
+\item[2003] The start of the \Compose* project, the project is described in further detail in this chapter.
+\item[2004] The first release of \Compose*, based on \dotNET.
+\item[2005] The start of the Java port of \Compose*.
+\item[2006] Porting \Compose* to C is started.
+\end{description}

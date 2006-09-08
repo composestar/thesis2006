@@ -1,0 +1,42 @@
+% keystyle.sty
+% Olaf Conradi <olaf@conradi.org>
+%
+% Released under GPL version 2
+%
+% Allow common style definitions for packages using keyval.
+
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{keystyle}[2005/07/04 v0.1 Add style option to keyval families by Olaf Conradi]
+
+\RequirePackage{keyval}
+\RequirePackage{ifthen}
+
+\newboolean{@ks@graphicxUsed}
+\setboolean{@ks@graphicxUsed}{false}
+
+\DeclareOption{graphicx}{\setboolean{@ks@graphicxUsed}{true}}
+\ProcessOptions\relax
+
+% Add style key to family #1.
+\newcommand{\addstyletofamily}[1]{%
+  \define@key{#1}{style}{%
+    \@ifundefined{@ks@#1style@##1}{%
+      \PackageError{keystyle}{Undefined style '##1' in family '#1'.}
+    }{%
+      \csname @ks@#1style@##1\endcsname
+    }
+  }
+}
+
+% Define a style called #2 for family #1 with options #3.
+\newcommand{\keystyle}[3]{%
+  \expandafter\def\csname @ks@#1style@#2\endcsname{\setkeys{#1}{#3}}
+}
+
+% Define command \gindefinestyle to create styles for \includegraphics command.
+\ifthenelse{\boolean{@ks@graphicxUsed}}{%
+  \RequirePackage{graphicx}
+  \addstyletofamily{Gin}
+  \newcommand{\gindefinestyle}[2]{\keystyle{Gin}{#1}{#2}}
+}\@empty
+

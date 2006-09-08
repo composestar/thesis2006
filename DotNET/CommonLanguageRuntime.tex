@@ -1,0 +1,49 @@
+\section{Common Language Runtime}
+\label{sec:clr}
+The Common Language Runtime executes code and provides core services. These core services are memory management, thread execution, code safety verification and compilation. Apart from providing services, the CLR also enforces code access security and code robustness. 
+Code access security is enforced by providing varying degrees of trust to components, based on a number of factors, \eg the origin of a component. 
+This way, a managed component might or might not be able to perform sensitive functions, like file-access or registry-access. 
+By implementing a strict type-and-code-verification infrastructure, called the Common Type System (CTS), the CLR enforces code robustness. Basically there are two types of code; 
+
+\begin{description}[noitemsep,style=nextline]
+\item[Managed]
+Managed code is code, which has its memory handled and its types validated at execution by the CLR.
+It has to conform to the Common Type Specification (CTS \autoref{sec:cts}).
+If interoperability with components written in other languages is required, managed code has to conform to an even more strict set of specifications, the Common Language Specification (CLS).
+The code is run by the CLR and is typically stored in an intermediate language format. This platform independent intermediate language is officially known as Common Intermediate Language (CIL \autoref{sec:TheIntermediateLanguage})~\cite{Watkins00}.
+\item[Unmanaged]
+Unmanaged code is not managed by the CLR. It is stored in the native machine language and is not run by the runtime but directly by the processor.
+\end{description}
+\nomenclature{JIT}{Just-in-time}
+
+All language compilers (targeting the CLR) generate managed code (CIL) that conforms to the CTS. 
+
+At runtime, the CLR is responsible for generating platform specific code, which can actually be executed on the target platform.
+Compiling from CIL to the native machine language of the platform is executed by the just-in-time (JIT) compiler. Because of this language independent layer it allows the development of CLRs for any platform, creating a true interoperability infrastructure~\cite{Watkins00}.
+The \dotNET Runtime from Microsoft is actually a specific CLR implementation for the Windows platform.
+\nomenclature{PDA}{Personal Digital Assistant}
+Microsoft has released the \emph{\dotNET Compact Framework} especially for devices such as personal digital assistants (PDAs) and mobile phones.
+The \dotNET Compact Framework contains a subset of the normal \dotNET Framework and allows \dotNET developer to write mobile applications. Components can be exchanged and web services can be used so an easier interoperability between mobile devices and workstations/servers can be implemented~\cite{Microsoft03-3}.
+
+At the time of writing, the \dotNET Framework is the only advanced Common Language Infrastructure (CLI) implementation available.
+A shared-source\footnote{Only non-commercial purposes are allowed.} implementation of the CLI for research and teaching purposes was made available by Microsoft in 2002 under the name Rotor~\cite{Stutz02}. In 2006 Microsoft released an updated version of Rotor for the \dotNET platform version two.
+Also Ximian is working on an open source implementation of the CLI under the name Mono\footnote{\url{http://www.go-mono.com/}}, targeting both Unix/Linux and Windows platforms.
+Another, somewhat different approach, is called Plataforma.NET\footnote{\url{http://personals.ac.upc.edu/enric/PFC/Plataforma.NET/p.net.html}} and aims to be a hardware implementation of the CLR, so that CIL code can be run natively.
+
+\subsection{Java VM vs \dotNET CLR}
+There are many similarities between Java and \dotNET technology. This is not strange, because both products serve the same market.
+
+\nomenclature{JVM}{Java Virtual Machine}
+Both Java and \dotNET are based on a runtime environment and an extensive development framework.
+These development frameworks provide largely the same functionality for both Java and \dotNET.
+The most obvious difference between them is lack of language independence in Java.
+While Java's strategy is `One language for all platforms' the \dotNET philosophy is `All languages on one platform'.
+However these philosophies are not as strict as they seem.
+As noted in \autoref{sec:fcl} there is no technical obstacle for other platforms to implement the \dotNET Framework.
+There are compilers for non-Java languages like Jython (Python)~\cite{Jython03} and WebADA~\cite{Ada96} available for the JVM.
+Thus, the JVM in its current state, has difficulties supporting such a vast array of languages as the CLR.
+However, the multiple language support in \dotNET is not optimal and has been the target of some criticism.
+
+Although the JVM and the CLR provide the same basic features they differ in some ways.
+While both CLR and the modern JVM use JIT (Just In Time) compilation the CLR can directly access native functions.
+This means that with the JVM an indirect mapping is needed to interface directly with the operating system.

@@ -1,0 +1,488 @@
+% composestar.sty
+% Olaf Conradi <olaf@conradi.org>
+%
+% Released under GPL version 2.
+%
+%
+% Description
+% -----------
+% This package contains all definitions and styles for using the common
+% chapters in your Compose* thesis.
+%
+% It defines some convenience styles for a uniform look and easy
+% typing in LaTeX. It acts a bit like classes in CSS.
+%
+% For package graphics there are various styles to scale an image relative to
+% the size of the writable area of the page (inside the margins).
+%
+% Predefined styles are: fourthheight, thirdheight, halfheight, page and
+%                        halfwidth.
+%
+% For package listings there are various styles defined to pretty print source
+% code. Style inline is the default, so you can easily use \lstinline|code|
+% without specifying a style.
+%
+% Predefined styles are: listing, floatlisting and inline.
+%
+% Defines \Compose* command and \dotNET, in spirit of abbr package.
+% Using option fancy one can turn the asterisk into a star.
+%
+% \Compose<*><[port]>
+%
+% \Compose with an optional * and optional [port] section.
+% Example: \Compose*[J] or \Compose*[.NET]
+%
+% !! Please note !!
+% There is one caveat in using \somecommand{.. \Compose*} (because of PDF
+% bookmarks). The \Compose command needs two arguments which can be anything but
+% the } character. The command checks for the existence of the * and [ ]
+% characters and preserves the rest.
+%
+% The LaTeX errors are either ``Runaway argument'' or ``Argument of
+% \Compose has an extra }.''
+%
+% Example:
+% \chapter{Foobar \Compose*} should be \chapter{Foobar \Compose*{}}
+% \chapter{Foobar \Compose}  should be \chapter{Foobar \Compose{}{}}
+%
+%
+% Including the package
+% ---------------------
+% \usepackage[options]{composestar}
+%
+% Some packages (nomencl and footmisc) set some default options, if you do not
+% like them, include that package before including this package:
+% \usepackage[youroptions]{footmisc}
+% \usepackage{composestar}
+%
+%
+% Options
+% -------
+% fancy         Defines \Compose* with a nicer star, instead of asterisk.
+% color         Turns on color listings.
+% relax         Make LaTeX less strict in stretching text.
+% floatcontrol  Set some options to control float placement.
+%
+%
+% Requirements
+% ------------
+% color
+% calc
+% graphicx
+% subfig
+% listings
+% nomencl version 2005/03/31 or later
+% footmisc
+% url
+% enumitem
+% lstsub - bundled, not on CTAN
+% abbr - bundled, not on CTAN
+% keystyle - bundled, not on CTAN
+% 
+%
+% Example thesis.tex
+% ------------------
+% \documentclass[a4paper,11pt]{report}
+%
+% \usepackage[color,fancy]{composestar}
+%
+% % Include other packages to your liking, for example
+% \usepackage[numbers]{natbib}
+% \usepackage[Sonny]{fncychap}
+%
+% % Always include package hyperref last
+% \usepackage[colorlinks=true,bookmarksnumbered,linktocpage]{hyperref}
+% % Optionally with package hypcap
+% \usepackage[figure,table]{hypcap}
+%
+% \begin{document}
+%
+% My thesis on \Compose*. See \autoref{fig:myfigure} and \autoref{lst:myconcern}
+% for an example concern called \lstinline|myconcern|.
+%
+% \begin{figure}
+%   \centering
+%   \includegraphics[style=thrirdheight]{file}
+%   \caption{This figure is only one third of the page in height}
+%   \label{fig:myfigure}
+% \end{figure}
+%
+% \begin{lstlisting}[language=ComposeStar,style=floatlisting,caption={Code},label={lst:myconcern}]
+% concern myconcern {
+%   // ..
+% }
+% \end{lstlisting}
+%
+% \end{document}
+
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{composestar}[2006/06/11 Required preamble for composestar thesis]
+
+\RequirePackage{ifthen}
+\RequirePackage{xspace}
+
+\providecommand{\ifthen}[2]{\ifthenelse{#1}{#2}{}}
+
+% Common preamble
+\RequirePackage{color}
+\RequirePackage{graphicx}
+\RequirePackage{subfig}
+\RequirePackage{listings}
+% Add nomenclature to table of contents.
+\RequirePackage[intoc]{nomencl}[2005/03/31]
+% Reset footnote count every page.
+\RequirePackage[perpage]{footmisc}
+\RequirePackage{url}
+% Defines compact versions of enumerate, itemize, etc.
+\RequirePackage{enumitem}
+% Allows for sub listings.
+\RequirePackage{lstsub}
+% Defines abbreviations with correct spacing.
+\RequirePackage{abbr}
+% Allows us to define styles for figures.
+\RequirePackage[graphicx]{keystyle}
+% For calculation inside graphic style page.
+\RequirePackage{calc}
+% For adjustwidth environment.
+\RequirePackage{chngpage}
+
+\newboolean{@compstar@fancy}
+\setboolean{@compstar@fancy}{false}
+\DeclareOption{fancy}{\setboolean{@compstar@fancy}{true}}
+\newboolean{@compstar@color}
+\setboolean{@compstar@color}{false}
+\DeclareOption{color}{\setboolean{@compstar@color}{true}}
+\newboolean{@compstar@relax}
+\setboolean{@compstar@relax}{false}
+\DeclareOption{relax}{\setboolean{@compstar@relax}{true}}
+\newboolean{@compstar@floatcontrol}
+\setboolean{@compstar@floatcontrol}{false}
+\DeclareOption{floatcontrol}{\setboolean{@compstar@floatcontrol}{true}}
+\ProcessOptions\relax
+
+% Enable numbering upto subsubsections
+\setcounter{secnumdepth}{3}
+
+% Color (re)definitions {{{
+
+% Define printer friendly versions of common colors.
+\definecolor{bloodred}{rgb}{.8,0,0}
+\definecolor{darkgreen}{rgb}{0,.25,0}
+\definecolor{mediumblue}{rgb}{0,0,.8}
+\definecolor{gray}{rgb}{.5,.5,.5}
+\definecolor{silver}{rgb}{.75,.75,.75}
+\definecolor{off-white}{rgb}{.97,.97,.97}
+% Override standard colors.
+\definecolor{red}{rgb}{.8,0,0}% Same as blood red.
+\definecolor{green}{rgb}{0,.5,0}
+\definecolor{blue}{rgb}{0,0,.8}% Same as medium blue.
+
+% }}}
+
+% Code listing definitions {{{
+
+% Define Compose* language in listings.
+\lstdefinelanguage{ComposeStar}{%
+  morekeywords={concern,filtermodule,superimposition,implementation,%
+                % filter module
+                internals,externals,conditions,methods,%
+                inputfilters,outputfilters,%
+                % superimposition
+                selectors,filtermodules,annotations,constraints,%
+                % constraint model
+                before,if,skipif,ordif,ordskipif,includes,excludes,%
+                m_includes,with,and,or,not,%
+                % other
+                as,in,by},%
+  morestring=[b]",%
+  morestring=[b]',%
+  morecomment=[l]{//},%
+  morecomment=[s]{/*}{*/},%
+  sensitive=false%
+}
+
+% Define Hyper/J language in listings.
+\lstdefinelanguage[HyperJ]{Java}[]{Java}{%
+  morekeywords={hyperspace,hypermodule,hyperslices,end,%
+                package,file,class,subclasses,interface,operation,%
+                action,function,field,variables,%
+                composable,uncomposable,except,including,%
+                relationships,external,mapping,summary,default,type,%
+                mergeByName,nonCorrespondingMerge,overrideByName,%
+                equate,rename,merge,noMerge,override,bracket,label,compound,%
+                simple,order,before,after,inheritance,inherited,parents,%
+                instance,returning,callaction,java,name,accessor,%
+                as,in,into,to,with,from,set,for,apply},%
+  morestring=[b]",%
+  sensitive=false%
+}
+
+% Define CIL language in listings.
+\lstdefinelanguage{CIL}{%
+  morekeywords=[1]{assembly,beforefieldinit,class,default,cdecl,cil,corflags,%
+                   culture,custom,data,entrypoint,fastcall,field,file,%
+                   hidebysig,hash,il,imagebase,locals,managed,marshall,%
+                   maxstack,mresource,method,module,namespace,publickey,%
+                   stdcall,subsystem,thiscall,unmanaged,vararg,ver,vtfixup,%
+                   % types
+                   bool,char,float32,float64,int,int8,int16,int32,%
+                   int64,method,native,object,string,modopt,modreq,pinned,%
+                   typedref,valuetype,unsigned,void,%
+                   % defining types
+                   abstract,ansi,auto,autochar,beforefieldinit,boxed,class,%
+                   explicit,extends,implements,interface,famandassem,family,%
+                   famorassem,inherits,nested,override,pack,private,property,%
+                   public,rtspecialname,sealed,sequential,serializable,size,%
+                   specialname,static,unicode,%
+                   % postfix
+                   algorithm,alignment,extern,init,from,nometadata,with},%
+  morekeywords=[2]{add,and,arglist,beq,bge,bgt,ble,blt,bne,br,break,brfalse,%
+                   brtrue,call,calli,ceq,cgt,ckfinite,clt,conv,cpblk,div,%
+                   dup,endfilter,endfinally,initblk,jmp,ldarg,ldarga,ldc,%
+                   ldftn,ldind,ldloc,ldloca,ldnull,leave,localloc,mul,neg,%
+                   nop,not,or,pop,rem,ret,shl,shr,starg,stind,stloc,sub,%
+                   switch,xor,%
+                   % prefix
+                   tail,unaligned,volatile,%
+                   % postfix
+                   un,s,ovf,%
+                   % object
+                   box,callvirt,castclass,cpobj,cctor,ctor,initobj,isinst,%
+                   ldelem,ldelema,ldfld,ldflda,ldlen,ldobj,ldsfld,ldsflda,%
+                   ldstr,ldtoken,ldvirtftn,mkrefany,newarr,newobj,refanytype,%
+                   refanyval,rethrow,sizeof,stelem,stfld,stobj,stsfld,throw,%
+                   unbox},%
+  sensitive=true,%
+  morecomment=[l]{//},%
+  morestring=[b]"%
+}
+
+% Clean listing style with hardly any markup.
+\lstdefinestyle{clean}{%
+  basicstyle=\ttfamily,%
+  keywordstyle=,%
+  identifierstyle=,%
+  stringstyle=,%
+  commentstyle=,%
+  showstringspaces=false%
+}
+
+% Colored listing style.
+\ifthenelse{\boolean{@compstar@color}}{%
+  \lstdefinestyle{color}{%
+    keywordstyle=\color{green}\bfseries,%
+    commentstyle=\color{gray}\itshape,%
+    numberstyle=\color{silver}\scriptsize,%
+    backgroundcolor=\color{off-white}%
+  }%
+}{%
+  \lstdefinestyle{color}{%
+    keywordstyle=\bfseries,%
+    commentstyle=\itshape,%
+    numberstyle=\scriptsize,%
+    backgroundcolor=\color{off-white}%
+  }%
+}
+
+% Listing style with colored keywords in a footnote sized font.
+\lstdefinestyle{listing}{%
+  style=clean,%
+  style=color,%
+  basicstyle=\footnotesize\ttfamily,%
+  numbers=left,%
+  tabsize=2,%
+  breaklines=true,%
+  captionpos=b%
+}
+
+\lstdefinestyle{floatlisting}{%
+  style=listing,%
+  float%
+}
+
+% Use clean style for inline listings, but in a small font and turn on
+% line breaking to prevent under- or overfull boxes.
+\lstdefinestyle{inline}{%
+  style=clean,%
+  basicstyle=\small\ttfamily,%
+  breaklines=true%
+}
+
+% This is the default look for all listings (used for inline listings).
+\lstset{style=inline}
+\lstloadlanguages{[AspectJ]Java,[HyperJ]Java,ComposeStar}
+
+% }}}
+
+% Graphic style definitions {{{
+
+% Graphic is allowed to fill one fourth of the page.
+\gindefinestyle{fourthheight}{%
+  width=\linewidth,%
+  totalheight=0.25\textheight,%
+  keepaspectratio=true%
+}
+
+% Graphic is allowed to fill one third of the page.
+\gindefinestyle{thirdheight}{%
+  width=\linewidth,%
+  totalheight=0.33\textheight,%
+  keepaspectratio=true%
+}
+
+% Graphic is allowed to fill half the page.
+\gindefinestyle{halfheight}{%
+  width=\linewidth,%
+  totalheight=0.5\textheight,%
+  keepaspectratio=true%
+}
+
+% Graphic is allowed to fill the whole page minus some space (3 lines) for
+% the caption. Because it is very likely the figure environment is on a new
+% page, \partopsep is subtracted as well.
+% The subtraction requires package calc.
+\gindefinestyle{page}{%
+  width=\linewidth,%
+  totalheight=\textheight-\partopsep-3\baselineskip-\abovecaptionskip-\belowcaptionskip,%
+  keepaspectratio=true%
+}
+
+% Graphic is allowed fill roughly (for safety) half the line width.
+\gindefinestyle{halfwidth}{%
+  width=0.4\linewidth,%
+  totalheight=\textheight,%
+  keepaspectratio=true%
+}
+
+% Graphic is allowed fill the full text width.
+\gindefinestyle{textwidth}{%
+  width=\textwidth,%
+  totalheight=\textheight,%
+  keepaspectratio=true%
+}
+
+% Add a style to scale all visio graphics with the same factor.
+\gindefinestyle{visio}{%
+  scale=0.7%
+}
+
+% }}}
+
+% Define url style {{{
+
+% Make fonts for \url one size smaller in the typewriter font,
+% except for footnote size and smaller.
+\def\url@smallerttstyle{%
+  \def\UrlFont{%
+    \ifx\@currsize\small\footnotesize\else
+    \ifx\@currsize\normalsize\small\else
+    \ifx\@currsize\large\normalsize\else
+    \ifx\@currsize\Large\large\else
+    \ifx\@currsize\LARGE\Large\else
+    \ifx\@currsize\huge\LARGE\else
+    \ifx\@currsize\Huge\huge
+    \fi\fi\fi\fi\fi\fi\fi
+    \ttfamily
+  }%
+}
+\urlstyle{smallertt}
+
+% }}}
+
+% \Compose* and \dotNET definitions {{{
+
+% Unfortunately we can't use \newcommand*{\Compose}[2][]{..
+% to make the second argument default to []. This is because
+% \newcommand uses \futurelet internally and pdf bookmarks
+% don't allow these commands. So you can't use it inside
+% \chapter and \section definitions.
+%
+% The workaround is to check manually. But this makes the two
+% arguments mandatory. This is only a problem when the \Compose
+% command is followed by a }. Only in that case you need to provide
+% extra empty arguments:
+%
+% \somecommand{Some text \Compose*} should become
+% \somecommand{Some text \Compose*{}}
+%
+% \somecommand{Some text \Compose} should become
+% \somecommand{Some text \Compose{}{}}
+
+\newcommand*{\Compose}[2]{%
+  \ifx*#1\relax
+    \ifx[#2\relax
+      \@ComposeStarPlatform#2%
+    \else
+      \@ComposeStar #2%
+    \fi
+  \else
+    \ifx[#1\relax
+      \@ComposeNoStarPlatform#1#2%
+    \else
+      \@ComposeNoStar #1#2%
+    \fi
+  \fi
+}
+
+\newcommand*{\composename}{Compose}
+
+\ifthenelse{\boolean{@compstar@fancy}}{%
+  \newcommand*{\composestarsymbol}{%
+    \texorpdfstring{%
+      \begingroup
+        \ifx\@currsize\tiny\scriptsize\else
+        \ifx\@currsize\scriptsize\footnotesize\else
+        \ifx\@currsize\footnotesize\small\else
+        \ifx\@currsize\small\normalsize\else
+        \ifx\@currsize\normalsize\Large\else
+        \ifx\@currsize\large\Large\else
+        \ifx\@currsize\Large\LARGE\else
+        \ifx\@currsize\LARGE\huge\else
+        \ifx\@currsize\huge\Huge
+        \fi\fi\fi\fi\fi\fi\fi\fi\fi
+        \raise.2ex\hbox{\ensuremath{\star}}%
+      \endgroup
+    }{*}%
+  }%
+}{%
+  \newcommand*{\composestarsymbol}{*}%
+}
+
+\newcommand*{\composedivider}[1]{/#1}
+
+\newcommand*{\@ComposeStar}{\composename\composestarsymbol\xspace}
+\newcommand*{\@ComposeNoStar}{\composename\xspace}
+\def\@ComposeStarPlatform[#1]{\composename\composestarsymbol\composedivider{#1}\xspace}
+\def\@ComposeNoStarPlatform[#1]{\composename\composedivider{#1}\xspace}
+
+% Minor note: Don't use this one in \Compose*[\dotNET] as the \xspace does
+% not detect this and inserts an extra space :(
+% Use \Compose*[.NET] in that case.
+\newcommand*{\dotNET}{.NET\xspace}
+
+% }}}
+
+% Relax stretch {{{
+
+\ifthen{\boolean{@compstar@relax}}{%
+  % When the paper contains a lot of source code which produces overfull hboxes,
+  % turning this option on makes the hyphenation rules less strict.
+  \tolerance=500% Default is 200
+
+  % Allow 2em extra during justification.
+  \setlength{\emergencystretch}{2em}
+}
+
+% }}}
+
+% Control float placement {{{
+
+\ifthen{\boolean{@compstar@floatcontrol}}{%
+  % Increase bottom fraction slightly. Allows bigger floats at the bottom.
+  \renewcommand{\bottomfraction}{0.5}% Default is 0.3
+
+  % Allow only one figure at the top.
+  \setcounter{topnumber}{1}% Default is 2
+}
+
+% }}}

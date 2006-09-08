@@ -1,0 +1,109 @@
+\documentclass[a4paper,11pt]{report}
+
+% You can add margin options here, i.e. [hmargin=3cm,vmargin=4cm]
+\usepackage{geometry}
+
+% Select Times New Roman, Helvetica and Courier fonts.
+%\usepackage{mathptmx}
+%\usepackage[scaled=0.91]{helvet}
+%\usepackage{courier}
+
+\usepackage[color,fancy,relax,floatcontrol]{composestar}
+
+% Allows for fixme notes.
+% Replace option draft with final when done,
+% this will remove the listoffixmes and complain if there are any
+% fixmes left in the document.
+\usepackage[draft]{fixme}
+
+% Number style 
+\usepackage[numbers,sort]{natbib}
+
+% Author, Year style
+%\usepackage[authoryear,square]{natbib}
+%\let\cite=\citep
+
+% Lay-out of bibliography
+\bibliographystyle{abbrvnat}
+
+%\usepackage[Sonny]{fncychap}
+
+% Create evenly spaced table cells.
+%\usepackage{tabls}
+
+% Always include hyperref last.
+\usepackage[colorlinks=true,bookmarksnumbered,linktocpage,plainpages=false]{hyperref}
+% Optionally set the target ancher for hyperref at the top of a figure or table.
+% This only works if the figure or table contains a caption.
+%\usepackage[figure,table]{hypcap}
+
+% Turn color links black
+\hypersetup{%
+  linkcolor=black,%
+  citecolor=black,%
+  pagecolor=black,%
+  anchorcolor=black,%
+  urlcolor=black%
+}
+
+% To include only those chapters I'm currently working on.
+%\includeonly{problem,events}
+
+% Make \autoref use the capitalized version just like figure,
+% let subsection be the same as section and
+% let subfigure be the same as figure.
+\renewcommand{\chapterautorefname}{Chapter}
+\renewcommand{\sectionautorefname}{Section}
+\renewcommand{\subsectionautorefname}{\sectionautorefname}
+\newcommand{\subfigureautorefname}{\figureautorefname}
+
+\makenomenclature
+
+% Only show up to level 3 in table of contents.
+%\setcounter{tocdepth}{3}
+% Show subfloats in list of figures.
+%\setcounter{lofdepth}{2}
+% Show subfloats in list of listings.
+%\setcounter{loldepth}{2}
+
+% Set the graphics path so we just need to add the name and not
+% the complete path.
+\graphicspath{{./}{./AOSD/images/}{./Composestar/images/}{./DotNET/images/}}
+
+\begin{document}
+
+% Frontmatter.
+\title{Some title in \Compose*{}}
+\author{Your name goes here}
+
+% Workaround for resetting page count.
+% Otherwise a warning is generated (destination with same identifier).
+% The page number is suppressed on the title page anyway.
+\pagenumbering{alph}
+\maketitle
+
+\clearpage
+\pagenumbering{roman}% Roman numbering i, ii, ..
+
+%\include{abstract}
+%\include{acknowledgements}
+
+\listoffixmes
+\tableofcontents
+\listoffigures
+\lstlistoflistings
+\printnomenclature[1in]
+
+\clearpage
+\pagenumbering{arabic}% Arabic numbering 1, 2, ..
+
+% Mainmatter
+\include{AOSD/AOSD}
+\include{Composestar/ComposeStar}
+\include{DotNET/DotNET}
+
+% Backmatter
+\bibliography{general,dotnet,composestar,aosd-bibliography}
+
+\end{document}
+

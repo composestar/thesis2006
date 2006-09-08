@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="no"?>
+<txcop:outputProfiles version="1" xmlns:txcop="http://schemas.ToolsCenter.org/TeXnicCenter/OutputProfiles.xsd">
+	<outputProfileList>
+		<outputProfile name="ComposeStar =&gt; PDF" stopOnLatexError="false">
+			<texCommand execute="true" path="make.exe" arguments="pdfonce"/>
+			<bibTexCommand execute="true" path="make.exe" arguments="bibonce"/>
+			<makeIndexCommand execute="true" path="make.exe" arguments="idxonce"/>
+			<postProcessors/>
+			<viewer path="AcroRd32.exe" closeBeforeCompilation="true">
+				<viewProjectCommand type="dde">
+					<commandLineCommand path="AcroRd32.exe" arguments=""/>
+					<ddeCommand path="AcroRd32.exe" server="acroview" topic="control" command="[DocOpen(&quot;%bm.pdf&quot;)][FileOpen(&quot;%bm.pdf&quot;)]"/>
+				</viewProjectCommand>
+				<viewCurrentFileCommand type="dde">
+					<commandLineCommand path="AcroRd32.exe" arguments=" &quot;%bm.pdf&quot;"/>
+					<ddeCommand path="AcroRd32.exe" server="acroview" topic="control" command="[DocOpen(&quot;%bm.pdf&quot;)][FileOpen(&quot;%bm.pdf&quot;)]"/>
+				</viewCurrentFileCommand>
+				<viewCloseCommand type="dde">
+					<commandLineCommand path="AcroRd32.exe" arguments=""/>
+					<ddeCommand path="" server="acroview" topic="control" command="[DocClose(&quot;%bm.pdf&quot;)]"/>
+				</viewCloseCommand>
+			</viewer>
+		</outputProfile>
+	</outputProfileList>
+</txcop:outputProfiles>

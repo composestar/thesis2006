@@ -1,0 +1,124 @@
+% lstsub.sty
+%
+% Copyright 2006 Olaf Conradi <olaf@conradi.org>
+%
+% Released under GPL version 2
+%
+% Support sublistings for multi-column listings in subfig style.
+%
+% Usage
+% -----
+% Set up an environment for your listings. Just like figure environments,
+% centering, caption and label are optional.
+%
+% \begin{lstsub}
+%   \centering
+%   % Sublistings
+%   \caption{Optional Caption.}
+%   \label{lst:mycodes}
+% \end{lstsub}
+% 
+% The subfloat listings are created inside a minipage of given width.
+%
+% \begin{lstsublisting}[key-style]{width}
+%   % Code listing
+% \end{lstsublisting}
+%
+% Optional argument key-style passes all options to lstlisting from package
+% listings. The caption, title and label keys are redefined. Option boxpos
+% is reused for positioning the minipage.
+%
+% caption=[short]long     Creates caption of long.
+%                         Optional short caption for in table of listings.
+% title=long              Also sets the caption, but disables the short one.
+% label=label             Create a label. Usually in the form of lst:label.
+% boxpos=position         Sets the position of the minipage. Use t (top),
+%                         b (bottom) or c (center). Bottom is the default.
+%
+% Example
+% -------
+% \begin{lstsub}
+%   \centering
+%   \begin{lstsublisting}[language=C,backgroundcolor={\color{blue}},caption={[One]Version One.},label={lst:main_a}]{0.45\textwidth}
+% int main() {
+%   printf("hi");
+%   return 0;
+% }
+% \end{lstsublisting}\qquad
+% \begin{lstsublisting}[language=C,backgroundcolor={\color{green}},caption={[Two]Version Two.},label={lst:main_b}]{0.45\textwidth}
+% int main() {
+%   printf("ha");
+%   return 0;
+% }
+% \end{lstsublisting}%
+%   \caption{Two main implementations.}
+%   \label{lst:main}
+% \end{lstsub}
+%
+
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{lstsub}[2006/05/28 Sublisting support by Olaf Conradi]
+
+\RequirePackage{keyval}
+\RequirePackage{listings}
+\RequirePackage{subfig}
+
+% The environment to hold sublistings.
+\newenvironment{lstsub}{%
+  \def\fnum@lstlisting{\lstlistingname~\thelstlisting}%
+  \@float{lstlisting}%
+}{%
+  \end@float
+}
+% Double column version.
+\newenvironment{lstsub*}{%
+  \def\fnum@lstlisting{\lstlistingname~\thelstlisting}%
+  \@dblfloat{lstlisting}%
+}{%
+  \end@dblfloat
+}
+
+% Write entries to list of listings file.
+\@namedef{ext@lstlisting}{lol}
+
+% Define new subfloat type.
+\newsubfloat{lstlisting}
+
+% Allow for autoref usage.
+\newcommand{\sublstlistingautorefname}{\lstlistingname}
+
+% Put the listing inside a minipage of the given width.
+% And pass the resulting box to our subfloat.
+\newsavebox{\lst@SubListingBox}
+\lstnewenvironment{lstsublisting}[2][]{%
+  \define@key{lst}{label}{\def\lst@SubListingLabel{##1}}%
+  \define@key{lst}{title}{\def\lst@SubListingCaption{##1}\let\lst@SubListingShortCaption\@empty}%
+  % \lstKV@OptArg (defined in package listings) will split two arguments
+  % formatted as [short]long in #1 for short and #2 for long, or
+  % when only one argument is given, both #1 and #2 are the same.
+  % (This acts a bit like LaTeX internal \@dblarg used in \caption.)
+  \define@key{lst}{caption}{%
+    \lstKV@OptArg[{##1}]{##1}{%
+      \def\lst@SubListingShortCaption{####1}%
+      \def\lst@SubListingCaption{####2}%
+    }%
+  }%
+  \let\lst@SubListingLabel\@empty
+  \let\lst@SubListingCaption\@empty
+  \let\lst@SubListingShortCaption\@empty
+  % Default boxpos to bottom, set given keys, disallow a floating listing
+  % (the whole lstsub environment floats) and prevent it from adding an
+  % entry to the list of listings (subfloat will add it if a caption is
+  % defined).
+  \lstset{boxpos=b,#1,float=false,nolol}%
+  \setbox\lst@SubListingBox=\hbox\bgroup\minipage[\lst@boxpos]{#2}%
+}{%
+  \endminipage\egroup
+  \subfloat[\lst@SubListingShortCaption][\lst@SubListingCaption]{%
+    \ifx\lst@SubListingLabel\@empty\else
+      \label{\lst@SubListingLabel}%
+    \fi
+    \usebox{\lst@SubListingBox}%
+  }%
+}
+

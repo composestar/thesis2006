@@ -1,0 +1,28 @@
+% abbr.sty
+% Olaf Conradi <olaf@conradi.org>
+%
+% Released under GPL version 2.
+%
+% Define common abbreviations with correct spacing and punctuation.
+
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{abbr}[2006/06/12 v0.2 Common abbreviations]
+
+\RequirePackage{xspace}
+
+% \xspace inserts a space after a command, unless followed by punctuation.
+% \@ after a period makes sure it does not signal the end of a sentence.
+% \, adds a thin space.
+
+\newcommand*{\ie}{i.e.,\xspace}
+\newcommand*{\eg}{e.g.,\xspace}
+
+\newcommand*{\etal}{et~al.\@\xspace}
+\newcommand*{\sic}{\textit{sic}\xspace}
+
+% Don't add a period when used at end of sentence.
+\newcommand*{\etc}{\@ifnextchar.{etc}{etc.\@\xspace}}
+
+\newcommand*{\MSc}{M.\,Sc.\@\xspace}
+\newcommand*{\BSc}{B.\,Sc.\@\xspace}
+
