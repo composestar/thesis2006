@@ -144,7 +144,7 @@
 % For calculation inside graphic style page.
 \RequirePackage{calc}
 % For adjustwidth environment.
-\RequirePackage{chngpage}
+\RequirePackage[strict]{chngpage}
 
 \newboolean{@compstar@fancy}
 \setboolean{@compstar@fancy}{false}
@@ -333,7 +333,7 @@
 % Graphic is allowed to fill half the page.
 \gindefinestyle{halfheight}{%
   width=\linewidth,%
-  totalheight=0.5\textheight,%
+  totalheight=0.45\textheight,%
   keepaspectratio=true%
 }
 
@@ -354,9 +354,9 @@
   keepaspectratio=true%
 }
 
-% Graphic is allowed fill the full text width.
-\gindefinestyle{textwidth}{%
-  width=\textwidth,%
+% Graphic is allowed fill the full line width.
+\gindefinestyle{linewidth}{%
+  width=\linewidth,%
   totalheight=\textheight,%
   keepaspectratio=true%
 }

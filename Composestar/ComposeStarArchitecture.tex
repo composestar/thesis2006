@@ -45,20 +45,18 @@ Depending on if the the condition part evaluates to true, and the matching part 
 The runtime also facilitates the debugging of the composition filter implementations.
 
 \section{Platforms}
-\Compose* can in theory be applied to any programming language given certain assumptions are met. 
-Currently \Compose* has three platforms.
+The composition filters concept of \Compose* can be applied to any programming language, given that certain assumptions are met.
+Currently, \Compose* supports three platforms: \dotNET, Java and C\@.
+For each platform different tools are used for compilation and weaving.
+They all share the same platform independent compile-time.
 
-\subsection{Java}
-\Compose*[J], the Java platform of \Compose*, uses different compiling and weaving tools then the other platforms.
-For the use of \Compose*[J] an Eclipse plug-in is provided. 
-
-\subsection{C}
-\Compose*[C], the C platform of \Compose*, is different from its Java and \dotNET counterparts because it does not have a runtime interpreter.
-This implies that the filters implementation of \Compose*[C] uses generated composition filter code that is weaved directly in the source code.
-Because the programming language C does not have the concept of objects the reasoning within \Compose* is based on sets of functions.
+\Compose*[.NET] targets the \dotNET platform and is the oldest implementation of \Compose*.
+Its weaver operates on CIL byte code.
+\Compose*[.NET] is programming language independent as long as the programming language can be compiled to CIL code.
+An add-in for Visual Studio is provided for ease of development.
+\Compose*[J] targets the Java platform and provides a plug-in for integration with Eclipse.
+\Compose*[C] contains support for the C programming language.
+The implementation is different from the Java and \dotNET counterparts, because it does not have a run-time environment.
+The filter logic is woven directly in the source code.
+Because the language C is not based on objects, filters are woven on functions based on membership of sets of functions.
 Like the Java platform, \Compose*[C] provides a plug-in for Eclipse.
-
-\subsection{\dotNET}
-The \dotNET platform called \Compose*[.NET] of \Compose* is the oldest implementation of \Compose*.
-Because \Compose*[.NET] works with CIL code, it is programming language independent as long as the programming language can be compiled to CIL code.
-The \dotNET platform uses a Visual Studio add-in for ease of development.
