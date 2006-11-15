@@ -1,0 +1,29 @@
+% tmplog.sty
+%
+% Copyright 2006 Olaf Conradi <olaf@conradi.org>
+%
+% Released under GPL version 2
+%
+% Definitions for logic and temporal operators.
+
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{tmplog}[2006/07/31 Logic and temporal operators by Olaf Conradi]
+
+\RequirePackage{amsmath}
+\RequirePackage{amssymb}
+\RequirePackage{wasysym}% For \ocircle
+
+% Logical operators
+\newcommand*{\logNeg}{\neg}
+\newcommand*{\logAnd}{\wedge}
+\newcommand*{\logOr}{\vee}
+\newcommand*{\logImplies}{\Rightarrow}
+\newcommand*{\logEquiv}{\Leftrightarrow}
+
+% Temporal operators
+\newcommand*{\tmpNext}{\mathop{\ocircle}}
+\newcommand*{\tmpGlobal}{\mathop{\Box}}
+\newcommand*{\tmpFuture}{\mathop{\Diamond}}
+\newcommand*{\tmpUntil}{\mathbin{\mathcal{U}}}% Strong until
+\newcommand*{\tmpUnless}{\mathbin{\mathcal{W}}}% Weak until
+

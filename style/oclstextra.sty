@@ -1,0 +1,49 @@
+\ProvidesFile{oclstextra.sty}
+ [2006/07/15 Extra language definitions]
+
+% Proposed syntax for event modules.
+\lstdefinelanguage[events]{ComposeStar}[]{ComposeStar}{%
+  morekeywords={eventmodule,eventmodules,symbols,pattern,eventfilters,before,after},%
+  sensitive=false%
+}
+
+% Proposed syntax when multiple patterns are allowed per event module.
+\lstdefinelanguage[events2]{ComposeStar}[]{ComposeStar}{%
+  morekeywords={eventmodule,eventmodules,symbols,patterns,eventfilters,before,after},%
+  sensitive=false%
+}
+
+% Adjusted AspectJ definition to add tracematch and sym.
+\lstdefinelanguage[TraceMatches]{Java}[]{Java}%
+  {morekeywords={%
+      adviceexecution,after,args,around,aspect,aspectOf,before,%
+      call,cflow,cflowbelow,%
+      execution,get,handler,if,initialization,issingleton,pointcut,%
+      percflow,percflowbelow,perthis,pertarget,preinitialization,%
+      privileged,proceed,returning,set,staticinitialization,strictfp,%
+      target,this,thisEnclosingJoinPoint,thisJoinPoint,throwing,%
+      within,withincode,%
+      % Tracematches
+      tracematch,sym},%
+   MoreSelectCharTable=%
+     \lst@DefSaveDef{`.}\lst@umdot{\lst@umdot\global\let\lst@derefop\@empty}%
+     \ifx\lst@derefinstalled\@empty\else
+        \global\let\lst@derefinstalled\@empty
+\lst@AddToHook{Output}%
+{\lst@ifkeywords
+    \ifx\lst@derefop\@empty
+       \global\let\lst@derefop\relax
+       \ifx\lst@thestyle\lst@gkeywords@sty
+          \ifx\lst@currstyle\relax
+             \let\lst@thestyle\lst@identifierstyle
+          \else
+             \let\lst@thestyle\lst@currstyle
+          \fi
+       \fi
+    \fi
+ \fi}
+\lst@AddToHook{BOL}{\global\let\lst@derefop\relax}%
+\lst@AddTo\lst@ProcessSpace{\global\let\lst@derefop\relax}%
+     \fi
+  }%
+

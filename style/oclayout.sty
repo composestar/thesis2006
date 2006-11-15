@@ -1,0 +1,194 @@
+% titling.sty
+% Olaf Conradi <olaf@conradi.org>
+%
+% Released under GPL version 2.
+
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{oclayout}[2006/06/05 Customized titles and other layout]
+
+%\RequirePackage[pagestyles,clearempty,nobottomtitles]{titlesec}
+\RequirePackage[pagestyles,clearempty]{titlesec}
+\RequirePackage{titletoc}
+\RequirePackage{caption}
+\RequirePackage{enumitem}
+\RequirePackage{ifthen}
+\RequirePackage{datetime}
+
+\newboolean{@oc@layout@optionDraft}
+\setboolean{@oc@layout@optionDraft}{false}
+
+\DeclareOption{draft}{\setboolean{@oc@layout@optionDraft}{true}}
+\DeclareOption{final}{\setboolean{@oc@layout@optionDraft}{false}}
+\ProcessOptions\relax
+
+%
+% Titlesec styles
+%
+
+% Emulate fncychap sonny :)
+\titleformat{\chapter}[display]%
+  {\filinner\normalfont\Huge\sffamily}%
+  {\Large\MakeUppercase{\chaptertitlename}\ \Huge\thechapter}{45pt}%
+  {\titlerule\vspace{5pt}}%
+  [\vspace{5pt}\titlerule]%
+
+% And format the rest in a uniform style.
+\titleformat{\section}%
+  {\normalfont\LARGE\sffamily}{\thesection}{1em}{}
+\titleformat{\subsection}%
+  {\normalfont\Large\sffamily}{\thesubsection}{1em}{}
+\titleformat{\subsubsection}%
+  {\normalfont\Large\sffamily}{\thesubsubsection}{1em}{}
+\titleformat{\paragraph}%
+  {\normalfont\large\sffamily}{\theparagraph}{1em}{}
+\titleformat{\subparagraph}[runin]%
+  {\normalfont\large\sffamily}{\thesubparagraph}{1em}{}
+
+% Specifies rubber lengths on pages.
+% Plus is for avoiding underfull vbox, while
+% minus is for avoiding overfull vbox on a page.
+\titlespacing*{\chapter}      {0pt}{45pt}{45pt}%
+\titlespacing*{\section}      {0pt}{3.5ex plus 1.5ex minus 1ex}{2.3ex plus .2ex}
+\titlespacing*{\subsection}   {0pt}{3.25ex plus 1ex minus .5ex}{1.5ex plus .2ex}
+\titlespacing*{\subsubsection}{0pt}{3ex plus 1ex minus .5ex}{1.5ex plus .2ex}
+\titlespacing*{\paragraph}    {0pt}{3ex plus 1ex minus .5ex}{1ex plus .2ex}
+\titlespacing*{\subparagraph} {\parindent}{3ex plus 1ex minus .5ex}{1ex plus .2ex}
+
+\newcommand{\chapterbreak}{\cleardoublepage}
+%\renewcommand{\bottomtitlespace}{.1\textheight}
+\renewcommand{\bottomtitlespace}{4cm}
+
+\titleclass{\chapter}{top}
+
+%
+% Headers and footers
+%
+
+\newcommand{\headsection}{{\footnotesize\sectiontitle}}
+\newcommand{\headchapter}{{\footnotesize\chaptertitle}}
+\newcommand{\footauthor}{{\footnotesize Olaf Conradi}}
+
+% Option draft turns on a footer with the date and time.
+\ifthenelse{\boolean{@oc@layout@optionDraft}}{%
+  \newcommand{\footversion}{\footnotesize Draft version, \today, at \xxivtime}%
+}{%
+  \newcommand{\footversion}\@empty
+}
+
+% Plain is used on the first page of a chapter.
+\renewpagestyle{plain}[\small\sffamily]{%
+  \setfoot[\thepage][\footversion][\footauthor]%
+          {\footauthor}{\footversion}{\thepage}%
+  \footrule
+  \widenhead[25mm][0pt]{0pt}{25mm}%
+}
+
+% Preamble is used in the preamble :)
+\newpagestyle{preamble}[\small\sffamily]{%
+  \sethead[][][\headchapter]%
+          {\headchapter}{}{}%
+  \setfoot[\thepage][\footversion][\footauthor]%
+          {\footauthor}{\footversion}{\thepage}%
+  \headrule
+  \footrule
+  \widenhead[25mm][0pt]{0pt}{25mm}%
+}
+
+% Thesis is used on most other pages.
+\newpagestyle{thesis}[\small\sffamily]{%
+  \sethead[\thesection~\headsection][][\headchapter]%
+          {\headchapter}{}{\headsection~\thesection}%
+  \setfoot[\thepage][\footversion][\footauthor]%
+          {\footauthor}{\footversion}{\thepage}%
+  \headrule
+  \footrule
+  \widenhead[25mm][0pt]{0pt}{25mm}%
+}
+
+%
+% Titletoc styles
+%
+
+% Show subfloats in list of figures, tables and listings.
+\setcounter{lofdepth}{2}
+\setcounter{lotdepth}{2}
+\setcounter{loldepth}{2}
+
+%
+% Caption styles
+%
+% Hmm, for some reason singlelinecheck does not work!
+
+%\DeclareCaptionStyle{boldhang}{%
+%  labelfont={sf,bf},textfont={rm},%
+%  labelsep=space,%
+%  singlelinecheck=true,
+%  format=hang,%
+%  aboveskip=10pt,%
+%}
+
+%\captionsetup[figure]{style=boldhang}
+%\captionsetup[lstlisting]{style=boldhang}
+
+% Put captions for table at top.
+\captionsetup[table]{position=top,aboveskip=10pt}
+\captionsetup[subtable]{position=top}
+
+%
+% Format enumitems
+%
+
+\setdescription{font=\sffamily}
+
+%
+% Optional formatting depending on loaded package
+%
+
+\AtBeginDocument{%
+
+  \@ifpackageloaded{hyperref}{%
+
+    %
+    % Autoref names
+    %
+
+    % Make \autoref use the capitalized version,
+    % let subsection be the same as section and
+    % let subfigure be the same as figure.
+    \renewcommand{\chapterautorefname}{Chapter}%
+    \renewcommand{\sectionautorefname}{Section}%
+    \renewcommand{\subsectionautorefname}{\sectionautorefname}%
+    \renewcommand{\subsubsectionautorefname}{\sectionautorefname}%
+    \newcommand{\subfigureautorefname}{\figureautorefname}%
+    \newcommand{\subtableautorefname}{\tableautorefname}%
+    \newcommand{\lstnumberautorefname}{Line}%
+    %\renewcommand{\contentsname}{Contents}% Same as default.
+    \renewcommand{\listfigurename}{Figures}%
+    \renewcommand{\listtablename}{Tables}%
+    %\renewcommand{\lstlistlistingname}{Listings}% Same as default.
+    \renewcommand{\listfixmename}{Corrections}%
+
+    %
+    % Hyperref colors
+    %
+
+    % Define some very dark colors for hyperref links.
+    \definecolor{xdarkred}{rgb}{.3,0,0}%
+    \definecolor{xdarkgreen}{rgb}{0,.3,0}%
+    \definecolor{xdarkblue}{rgb}{0,0,.3}%
+    \definecolor{xdarkcyan}{rgb}{0,.3,.3}%
+    \definecolor{xdarkpurple}{rgb}{.3,0,.3}%
+
+    \hypersetup{%
+      colorlinks,%
+      linkcolor=xdarkred,%
+      pagecolor=xdarkred,%
+      citecolor=xdarkgreen,%
+      urlcolor=xdarkcyan,%
+      filecolor=xdarkblue,%
+      anchorcolor=xdarkpurple,%
+    }%
+
+  }\@empty
+}
+

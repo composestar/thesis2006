@@ -1,0 +1,33 @@
+% ocgrammar.sty
+% Olaf Conradi <olaf@conradi.org>
+%
+% Released under GPL version 2.
+
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{ocgrammar}[2006/08/03 Customized grammar environment by Olaf Conradi]
+
+\RequirePackage{calc}
+\RequirePackage{color}
+\RequirePackage[nounderscore]{syntax}
+
+\@ifundefined{\string\color @off-white}{%
+  \definecolor{off-white}{rgb}{.97,.97,.97}%
+}\@empty
+
+% Make grammar environments appear in
+% * a minipage so it does not break across pages;
+% * a small typeface;
+% * with an off-white background.
+\let\orig@grammar=\grammar
+\let\endorig@grammar=\endgrammar
+\newsavebox{\grammarbox}%
+\newlength{\grammarboxwidth}%
+\renewenvironment{grammar}{%
+  \vspace{\medskipamount}%
+  \setlength{\grammarboxwidth}{\linewidth-2\fboxsep}%
+  \begin{lrbox}{\grammarbox}\begin{minipage}{\grammarboxwidth}\begin{small}\orig@grammar
+}{%
+  \endorig@grammar\end{small}\end{minipage}\end{lrbox}%
+  \noindent\colorbox{off-white}{\usebox{\grammarbox}}%
+}
+
