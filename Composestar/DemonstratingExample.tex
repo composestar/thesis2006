@@ -1,12 +1,12 @@
 \section{Demonstrating Example}
 \label{sec:demonstratingexample}
+
 To illustrate the \Compose* toolset, this section introduces a \emph{Pacman} example.
 The Pacman game is a classic arcade game in which the user, represented by pacman, moves in a maze to eat vitamins.
 Meanwhile, a number of ghosts try to catch and eat pacman.
 There are, however, four mega vitamins in the maze that make pacman evil.
 In its evil state, pacman can eat ghosts.
 A simple list of requirements for the Pacman game is briefly discussed here:
-
 \begin{itemize}[noitemsep]
   \item The number of lives taken from pacman when eaten by a ghost;
   \item A game should end when pacman has no more lives;
@@ -19,10 +19,10 @@ A simple list of requirements for the Pacman game is briefly discussed here:
 
 \subsection{Initial Object-Oriented Design}
 
-\begin{figure}
+\begin{figure}[p]
   \centering
   \includegraphics[style=page]{pacman_class_diagram}
-  \caption{UML class diagram of the object-oriented Pacman game}
+  \caption{Class diagram of the object-oriented Pacman game}
   \label{fig:pacman_class_diagram}
 \end{figure}
 
@@ -30,9 +30,8 @@ A simple list of requirements for the Pacman game is briefly discussed here:
 \autoref{fig:pacman_class_diagram} shows an initial object-oriented design for the Pacman game.
 Note that this UML class diagram does not show the trivial accessors.
 The classes in this diagram are:
-
-%\begin{description}[noitemsep,style=sameline,leftmargin=38mm]
-\begin{description}[noitemsep,style=nextline]
+%\begin{description}[noitemsep,style=nextline]
+\begin{description}[noitemsep,style=sameline,leftmargin=32mm]
   \item [Game] This class encapsulates the control flow and controls the state of a game;
   \item [Ghost] This class is a representation of a ghost chasing pacman.
     Its main attribute is a property that indicates whether it is scared or not (depending on the evil state of pacman);
@@ -52,18 +51,18 @@ The classes in this diagram are:
 \end{description}
 
 \subsection{Completing the Pacman Example}
+
 The initial object-oriented design, described in the previous section, does not implement all the stated system requirements.
 The missing requirements are:
-
 \begin{itemize}[noitemsep]
   \samepage
   \item The application does not maintain a score for the user;
   \item Ghosts move in random directions instead of chasing or fleeing from pacman.
 \end{itemize}
-
 In the next sections, we describe why and how to implement these requirements in the \Compose* language.
 
 \subsubsection{Implementation of Scoring}
+
 The first system requirement that we need to add to the existing Pacman game is scoring.
 This concern involves a number of events.
 First, the score should be set to zero when a game starts.
@@ -76,8 +75,10 @@ To implement scoring in the \Compose* language, we divide the implementation int
 The first part is a \Compose* concern definition stating which filter modules to superimpose.
 \autoref{lst:scoringconcern} shows an example \Compose* concern definition of scoring.
 
-\begin{lstlisting}[style=floatlisting,escapeinside={&$}{$&},language=ComposeStar,caption={\expandafter{\lstinline[style=inline]|DynamicScoring|} concern in \Compose*{}},label=lst:scoringconcern]
-concern DynamicScoring in pacman {&$\label{line:dynscore_concern}$&
+\begin{lstlisting}[style=floatlisting,escapeinside={&$}{$&},language=ComposeStar,%
+                   caption={\expandafter{\lstinline[style=inline]|DynamicScoring|} concern in \Compose*{}},%
+                   label={lst:scoringconcern}]
+concern DynamicScoring in Pacman {&$\label{line:dynscore_concern}$&
   filtermodule dynamicscoring {&$\label{line:dynscore_fm_begin}$&
     externals
       score : pacman.Score = pacman.Score.instance();
@@ -111,10 +112,9 @@ This part is defined by a class \lstinline|Score|.
 Instances of this class receive the messages sent by \lstinline|score_filter| and subsequently perform the events related to the scoring concern.
 In this way, all scoring events are encapsulated in one class and one \Compose* concern definition. 
 
-\begin{lstlisting}[style=floatlisting,language=Java,caption={Implementation of class \expandafter{\lstinline[style=inline]|Score|}},label=lst:scoreimpl]
-import Composestar.Runtime.FLIRT.message.*;
-import java.awt.*;
-
+\begin{lstlisting}[style=floatlisting,language=Java,%
+                   caption={Implementation of class \expandafter{\lstinline[style=inline]|Score|}},%
+                   label={lst:scoreimpl}]
 public class Score 
 {
   private int score = -100;
@@ -154,14 +154,14 @@ public class Score
     rm.proceed();
     label = new Label("Score: 0");
     label.setSize(15*View.BLOCKSIZE+20,15*View.BLOCKSIZE);
-    Main main = (Main)Composestar.Runtime.FLIRT.message.MessageInfo
-                                 .getMessageInfo().getTarget();
+    Main main = (Main)Composestar.Runtime.FLIRT.message.MessageInfo.getMessageInfo().getTarget();
     main.add(label,BorderLayout.SOUTH);
   }
 }
 \end{lstlisting}
 
 \subsubsection{Implementation of Dynamic Strategy}
+
 The last system requirement that we need to implement is the dynamic strategy of ghosts.
 This means that a ghost should, depending on the state of pacman, hunt or flee from pacman.
 We can implement this concern by using the strategy design pattern.
@@ -169,8 +169,11 @@ However, in this way, we need to modify the existing code.
 This is not the case when we use \Compose*{} \emph{dispatch filters}.
 \autoref{lst:dynamicstrategyconcern} demonstrates this. 
 
-\begin{lstlisting}[style=floatlisting,escapeinside={&$}{$&},language=Composestar,caption={\expandafter{\lstinline[style=inline]|DynamicStrategy|} concern in \Compose*{}},label=lst:dynamicstrategyconcern]
-concern DynamicStrategy in pacman {
+\begin{lstlisting}[style=floatlisting,escapeinside={&$}{$&},language=Composestar,%
+                   xrightmargin=-25mm,%
+                   caption={\expandafter{\lstinline[style=inline]|DynamicStrategy|} concern in \Compose*{}},%
+                   label={lst:dynamicstrategyconcern}]
+concern DynamicStrategy in Pacman {
   filtermodule dynamicstrategy {
     internals
       stalk_strategy : pacman.Strategies.StalkerStrategy;
