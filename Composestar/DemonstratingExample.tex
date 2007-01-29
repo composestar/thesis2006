@@ -196,7 +196,8 @@ concern DynamicStrategy in Pacman {
 }
 \end{lstlisting}
 
-This concern uses \emph{dispatch} filters to intercept calls to method \lstinline|RandomStrategy.getNextMove| and redirect them to either \lstinline|StalkerStrategy.getNextMove| or \lstinline|FleeStrategy.getNextMove|.
+This concern uses dispatch filters to intercept calls to method \lstinline|getNextMove| of the class \lstinline|RandomStrategy|.
+These calls are redirected to either \lstinline|StalkerStrategy.getNextMove| or \lstinline|FleeStrategy.getNextMove|.
 If pacman is not evil, the intercepted call matches the first filter, which dispatches the intercepted call to method \lstinline|StalkerStrategy.getNextMove| (line~\ref{line:stalker_filter}).
 Otherwise, the intercepted call matches the second filter, which dispatches the intercepted call to method \lstinline|FleeStrategy.getNextMove| (line~\ref{line:flee_filter}).
 
