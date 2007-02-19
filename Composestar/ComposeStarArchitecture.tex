@@ -37,8 +37,8 @@ This weaving specification is then used by the weaver contained by the program m
 The end result of the adaptation the target program which interfaces wit the runtime.
 
 \subsection{Runtime}
-The runtime layer is responsible for executing the concern code at the join points.
-It is activated at the join points by function calls that are woven in by the weaver.
+The runtime layer is responsible for executing the concern code at the joinpoints.
+It is activated at the joinpoints by function calls that are woven in by the weaver.
 A reduced copy of the knowledgebase containing the necessary information for filter evaluation and execution is enclosed with the runtime.
 When the function is filtered the filter is evaluated.
 Depending on if the the condition part evaluates to true, and the matching part matches the accept or reject behavior of the filter is executed.

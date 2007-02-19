@@ -151,11 +151,11 @@ A special syntax is used to specify aspects and the way in which they are combin
 The fundamental goals of AOP are twofold~\cite{gradecki:maj03}: first to provide a mechanism to express concerns that crosscut other components.
 Second to use this description to allow for the separation of concerns.
 
-\emph{Join points} are well-defined places in the structure or execution flow of a program where additional behavior can be attached.
-The most common join points are method calls.
-\emph{Pointcuts} describe a set of join points.
+\emph{Joinpoints} are well-defined places in the structure or execution flow of a program where additional behavior can be attached.
+The most common joinpoints are method calls.
+\emph{Pointcuts} describe a set of joinpoints.
 This allows us to execute behavior at many places in a program by one expression.
-\emph{Advice} is the behavior executed at a join point.
+\emph{Advice} is the behavior executed at a joinpoint.
 
 In the example of \autoref{lst:calc_aspects} the class \lstinline|Add| does not contain any tracing code and only implements the addition concern.
 Class \lstinline|CalcDisplay| also does not contain tracing code.

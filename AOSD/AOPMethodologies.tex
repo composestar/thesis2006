@@ -58,15 +58,15 @@ aspect DynamicCrosscuttingExample {
 }
 \end{lstlisting}
 
-The points in the execution of a program where the crosscutting behavior is inserted are called \emph{join points}.
-A \emph{pointcut} has a set of join points.
+The points in the execution of a program where the crosscutting behavior is inserted are called \emph{joinpoints}.
+A \emph{pointcut} has a set of joinpoints.
 In \autoref{lst:dynamiccrosscuttingexample} is \lstinline|traceMethods| an example of a pointcut definition.
 The pointcut includes all executions of any method that is in a class contained by package \lstinline|edu.utwente.trese|.
 
-The code that should execute at a given join point is declared in an advice.
+The code that should execute at a given joinpoint is declared in an advice.
 Advice is a method-like code body associated with a certain pointcut.
 AspectJ supports \emph{before}, \emph{after} and \emph{around} advice that specifies where the additional code is to be inserted.
-In the example both before and after advice are declared to run at the join points specified by the \lstinline|traceMethods| pointcut.
+In the example both before and after advice are declared to run at the joinpoints specified by the \lstinline|traceMethods| pointcut.
 
 Aspects can contain anything permitted in class declarations including definitions of pointcuts, advice and static crosscutting.
 For example, static crosscutting allows a programmer to add fields and methods to certain classes as shown in \autoref{lst:staticcrosscuttingexample}.
