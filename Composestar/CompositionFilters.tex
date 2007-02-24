@@ -1,8 +1,7 @@
 \section{Composition Filters in \Compose*{}}
 \label{sec:CompositionFiltersInComposeStar}
-
 % Removed "t" so that it is not longer breaking the history list
-\begin{lstlisting}[language=Composestar,style=floatlisting,float=bp, caption={Abstract concern template},label={lst:concerntemplate}]
+\begin{lstlisting}[language=Composestar,style=floatlisting,float=hbp, caption={Abstract concern template},label={lst:concerntemplate}]
 concern {
   filtermodule {
     internals
@@ -11,18 +10,15 @@ concern {
     inputfilters
     outputfilters
   }
-  
   superimposition {
     selectors
     filtermodules
     annotations
     constraints
   }
-  
   implementation
 }
 \end{lstlisting}
-
 A \Compose* application consists of concerns that can be divided in three parts: filter module specifications, superimposition, and implementation.
 A filter module contains the filter logic to filter on incoming or outgoing messages on superimposed objects.
 Messages have a target, which is an object reference, and a selector, which is a method name.
@@ -30,7 +26,7 @@ A superimposition part specifies which filter modules, annotations, conditions, 
 An implementation part contains the class implementation of a concern.
 How these parts are placed in a concern is shown in \autoref{lst:concerntemplate}.
 
-\begin{figure}
+\begin{figure}[hbp]
   \centering
   \includegraphics[style=thirdheight]{cfmodel}
   \caption{Components of the composition filters model}
@@ -53,10 +49,10 @@ Filters match when both the condition part and the matching part evaluate to tru
 In the demonstrated filter, every message where the selector is \lstinline|getNextMove| matches.
 If an asterisk~(\lstinline|*|) is used in the target, every target will match.
 When the condition part and the matching part are true, the message is substituted with the values provided in the substitution part.
-How these values are substituted, and how the message continues, depends on the type of filter used.
+How these values are substituted, and how the message continues, depends on the type of  filter used.
+\newpage
 At the moment there are four basic filter types defined in \Compose*.
 It is, however, possible to write custom filter types.
-
 \begin{description}[style=sameline,leftmargin=18mm]
   \item[Dispatch] If the message is accepted, it is dispatched to the specified target of the message, otherwise the message continues to the subsequent filter.
     This filter type can only be used for input filters;
