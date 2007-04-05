@@ -1,0 +1,46 @@
+<project name="Compose*/ARM" default="build">
+	<description>Compose* Annotated Reference Manual</description>
+	
+	<!-- the main file -->
+	<property name="tex.main" value="example" />
+	<!-- the directory that contains the Common chapters -->
+	<property name="tex.commondir" value="" />
+	
+	<property name="verbose" value="true" />
+	
+	<taskdef name="latex" classname="de.dokutransdata.antlatex.LaTeX" />
+	<taskdef name="bibtex" classname="de.dokutransdata.antlatex.BibTeXTask" />
+	<taskdef name="makeindex" classname="de.dokutransdata.antlatex.MakeindexTask" />
+	
+	<target name="build">
+		<latex latexfile="${tex.main}.tex" pdftex="true" verbose="${verbose}" passThruLaTeXParameters="-include-directory=${tex.commondir}style${file.separator}contrib;-include-directory=${tex.commondir}style">
+			<bibtex run="true" />
+			<makeindex run="true" outFile="${tex.main}.nls" idxstyle="nomencl.ist">
+				<fileset dir="${basedir}">
+					<include name="*.nlo" />
+				</fileset>
+			</makeindex>
+		</latex>
+	</target>
+	
+	<target name="clean">
+		<delete>
+			<fileset dir="${basedir}">
+				<include name="**/*.aux" />
+				<include name="${tex.main}.tps" />
+				<include name="${tex.main}.nlo" />
+				<include name="${tex.main}.lof" />
+				<include name="${tex.main}.log" />
+				<include name="${tex.main}.out" />
+				<include name="${tex.main}.toc" />
+				<include name="${tex.main}.bbl" />
+				<include name="${tex.main}.blg" />
+				<include name="${tex.main}.nls" />
+				<include name="${tex.main}.ilg" />
+			</fileset>
+		</delete>
+	</target>
+	
+	<target name="rebuild" depends="clean,build" />
+
+</project>

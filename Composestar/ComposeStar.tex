@@ -1,3 +1,7 @@
+\newif\ifuseOldExample
+% uncomment the following to use the old DemonstratingExample
+\useOldExampletrue
+
 \chapter{\Compose*{}}
 \begin{flushright}
 \textit{``The difficult part of composition filters}\\
@@ -17,7 +21,13 @@ In the third section, the \Compose* architecture is explained, followed by a des
 \input{Composestar/CompositionFilters}
 
 %\section{Demonstrating Example}
-\input{Composestar/DemonstratingExample}
+\ifuseOldExample
+	% Pacman 1 example
+	\input{Composestar/DemonstratingExample}
+\else	
+	% Pacman 2 example (used as of April 2007)
+	\input{Composestar/DemonstratingExample2}
+\fi
 
 %\section{\Compose* Architecture}
 \input{Composestar/ComposeStarArchitecture}
