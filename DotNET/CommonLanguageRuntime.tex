@@ -7,7 +7,7 @@ By implementing a strict type-and-code-verification infrastructure, called the C
 
 \begin{description}[noitemsep,style=nextline]
 \item[Managed]
-Managed code is code, which has its memory handled and its types validated at execution by the CLR.
+Managed code is code that has its memory handled and its types validated at execution by the CLR.
 It has to conform to the Common Type Specification (CTS \autoref{sec:cts}).
 If interoperability with components written in other languages is required, managed code has to conform to an even more strict set of specifications, the Common Language Specification (CLS).
 The code is run by the CLR and is typically stored in an intermediate language format. This platform independent intermediate language is officially known as Common Intermediate Language (CIL \autoref{sec:TheIntermediateLanguage})~\cite{Watkins00}.
@@ -28,7 +28,7 @@ The \dotNET Compact Framework contains a subset of the normal \dotNET Framework 
 At the time of writing, the \dotNET Framework is the only advanced Common Language Infrastructure (CLI) implementation available.
 A shared-source\footnote{Only non-commercial purposes are allowed.} implementation of the CLI for research and teaching purposes was made available by Microsoft in 2002 under the name Rotor~\cite{Stutz02}. In 2006 Microsoft released an updated version of Rotor for the \dotNET platform version two.
 Also Ximian is working on an open source implementation of the CLI under the name Mono\footnote{\url{http://www.go-mono.com/}}, targeting both Unix/Linux and Windows platforms.
-Another, somewhat different approach, is called Plataforma.NET\footnote{\url{http://personals.ac.upc.edu/enric/PFC/Plataforma.NET/p.net.html}} and aims to be a hardware implementation of the CLR, so that CIL code can be run natively.
+Another, somewhat different approach, is called Plataforma.NET\footnote{\url{http://personals.ac.upc.edu/enric/PFC/Plataforma.NET/p.net.html}}. Plataforma.NET aims to be a hardware implementation of the CLR, so that CIL code can be run natively.
 
 \subsection{Java VM vs \dotNET CLR}
 There are many similarities between Java and \dotNET technology. This is not strange, because both products serve the same market.
@@ -41,9 +41,9 @@ While Java's strategy is `One language for all platforms' the \dotNET philosophy
 However these philosophies are not as strict as they seem.
 As noted in \autoref{sec:fcl} there is no technical obstacle for other platforms to implement the \dotNET Framework.
 There are compilers for non-Java languages like Jython (Python)~\cite{Jython03} and WebADA~\cite{Ada96} available for the JVM.
-Thus, the JVM in its current state, has difficulties supporting such a vast array of languages as the CLR.
+Thus, the JVM in its current state has difficulties supporting such a vast array of languages as the CLR.
 However, the multiple language support in \dotNET is not optimal and has been the target of some criticism.
 
-Although the JVM and the CLR provide the same basic features they differ in some ways.
-While both CLR and the modern JVM use JIT (Just In Time) compilation the CLR can directly access native functions.
+Although the JVM and the CLR provide the same basic features, they differ in some ways.
+While both CLR and the modern JVM use JIT (Just In Time) compilation, the CLR can directly access native functions.
 This means that with the JVM an indirect mapping is needed to interface directly with the operating system.

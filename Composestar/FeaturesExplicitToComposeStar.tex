@@ -3,18 +3,17 @@
 The Composition Filters approach uses a restricted (pattern matching) language to define filters. This language makes it possible to reason about the semantics of the concern. 
 \Compose* offers three features that use this possibility, which originate in more control and correctness over an application under construction. These features are:
 \begin{description}[style=nextline,noitemsep]
-\item [Ordering of filter modules] It is possible to specify how the superimposition of filter modules should be ordered. Ordering constraints can be specified in a fixed, conditional, or partial manner. A fixed ordering can be calculated exactly, whereas a conditional ordering is dependent on the result of filter execution and therefore evaluated at runtime. When there are multiple valid orderings of filtermodules on a joinpoint, partial ordering constraints can be applied to reduce this number. These constraints can be declared in the concern definition;
+\item [Ordering of filter modules] It is possible to specify how the superimposition of filter modules should be ordered. Ordering constraints can be specified in a fixed, conditional, or partial manner. A fixed ordering can be calculated exactly, whereas a conditional ordering is dependent on the result of filter execution and therefore evaluated at runtime. When there are multiple valid orderings of filter modules on a join point, partial ordering constraints can be applied to reduce this number. These constraints can be declared in the concern definition;
 \item [Filter consistency checking] When superimposition is applied, \Compose* is able to detect if the ordering and conjunction of filters creates a conflict. 
-For example, imagine a set of filters where the first filter only evaluates method \emph{m} and another filter only evaluates methods \emph{a} and \emph{b}. 
-In this case the latter filter is only reached with method \emph{m}; this is consequently rejected and as a result the superimposition may never be executed. There are different scenarios that lead to these kinds of problems, \eg conditions that exclude each other;
-\item [Reason about semantic problems] When multiple pieces of advice are added to the same joinpoint, \Compose* can reason about problems that may occur.
+For example, imagine a set of filters where the first filter only lets method \lstinline|m| continue and the second filter only accepts for methods \lstinline|a| and \lstinline|b|. Because only method \lstinline|m| can reach the second filter, it never accepts. This might indicate a conflict.
+\item [Reason about semantic problems] When multiple pieces of advice are added to the same join point, \Compose* can reason about problems that may occur.
 An example of such a conflict is the situation where a real-time filter is followed by a wait filter. Because the wait filter can wait indefinitely, the real-time property imposed by the real-time filter may be violated.
 \end{description}
 The above mentioned conflict analyzers all work on the assumption that the behavior of every filter is well-defined. This is not the case for the meta filter, its user-undefined, and therefore unpredictable, behavior poses a problem to the analysis tools. 
 
 Furthermore, \Compose* is extended with features that enhance the usability. These features are briefly described below:
 \begin{description}[style=nextline,noitemsep]
-\item [Integrated Development Environment support] The \Compose* implementations all have a IDE plug-in; \Compose*[.NET] for Visual Studio, \Compose*[J] and \Compose*[C] for Eclipse;
+\item [Integrated Development Environment support] The \Compose* implementations all have an IDE plug-in; \Compose*[.NET] for Visual Studio, \Compose*[J] and \Compose*[C] for Eclipse;
 \item [Debugging support] The debugger shows the flow of messages through the filters. It is possible to place breakpoints to view the state of the filters; 
 \item [Incremental building process] When a project is build and not all the modules are changed, incremental building saves time.
 \end{description}

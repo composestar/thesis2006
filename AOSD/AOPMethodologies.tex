@@ -58,15 +58,15 @@ aspect DynamicCrosscuttingExample {
 }
 \end{lstlisting}
 
-The points in the execution of a program where the crosscutting behavior is inserted are called \emph{joinpoints}.
-A \emph{pointcut} has a set of joinpoints.
+The points in the execution of a program where the crosscutting behavior is inserted are called \emph{join points}.
+A \emph{pointcut} has a set of join points.
 In \autoref{lst:dynamiccrosscuttingexample} is \lstinline|traceMethods| an example of a pointcut definition.
 The pointcut includes all executions of any method that is in a class contained by package \lstinline|edu.utwente.trese|.
 
-The code that should execute at a given joinpoint is declared in an advice.
+The code that should execute at a given join point is declared in an advice.
 Advice is a method-like code body associated with a certain pointcut.
-AspectJ supports \emph{before}, \emph{after} and \emph{around} advice that specifies where the additional code is to be inserted.
-In the example both before and after advice are declared to run at the joinpoints specified by the \lstinline|traceMethods| pointcut.
+AspectJ supports \emph{before}, \emph{after} and \emph{around} advice, which specifies where the additional code is to be inserted.
+In the example both before and after advice are declared to run at the join points specified by the \lstinline|traceMethods| pointcut.
 
 Aspects can contain anything permitted in class declarations including definitions of pointcuts, advice and static crosscutting.
 For example, static crosscutting allows a programmer to add fields and methods to certain classes as shown in \autoref{lst:staticcrosscuttingexample}.
@@ -82,9 +82,9 @@ aspect StaticCrosscuttingExample {
 \end{lstlisting}
 
 The shown construct is called inter-type member declaration and adds a method \lstinline|trace| to class \lstinline|Log|.
-Other forms of inter-type declarations allow developers to declare the parents of classes (superclasses and realized interfaces), declare where exceptions need to be thrown, and allow a developer to define the precedence among aspects.
+Other forms of inter-type declarations allow developers to declare the parents of classes (super classes and realized interfaces), declare where exceptions need to be thrown, and allow a developer to define the precedence among aspects.
 
-With its variety of possibilities AspectJ can be considered a useful approach for realizing software requirements.
+With its variety of possibilities, AspectJ can be considered a useful approach for realizing software requirements.
 
 \subsection{Hyperspaces Approach}
 
@@ -100,11 +100,11 @@ The Hyperspaces approach adopts the principle of multi-dimensional separation of
 We explain the Hyperspaces approach by an example written in the \emph{Hyper/J} language.
 Hyper/J is an implementation of the Hyperspaces approach for Java.
 It provides the ability to identify concerns, specify modules in terms of those concerns, and synthesize systems and components by integrating those modules.
-Hyper/J uses bytecode weaving on binary Java class files and generates new class files to be used for execution.
+Hyper/J uses byte code weaving on binary Java class files and generates new class files to be used for execution.
 Although the Hyper/J project seems abandoned and there has not been any update in the code or documentation for a while, we still mention it because the Hyperspaces approach offers a unique AOP solution.
 
 As a first step, developers create hyperspaces by specifying a set of Java class files that contain the code units that populate the hyperspace.
-To do this is, you create a hyperspace specification, as demonstrated in \autoref{lst:hyperspaces1}.
+To do this, you create a hyperspace specification, as demonstrated in \autoref{lst:hyperspaces1}.
 
 \begin{lstlisting}[language={[HyperJ]Java},style=floatlisting,%
                    caption={Creation of a hyperspace},label={lst:hyperspaces1},%

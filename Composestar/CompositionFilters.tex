@@ -50,10 +50,10 @@ A filter identifier is a unique name for a filter in a filter module.
 Filters match when both the condition part and the matching part evaluate to true.
 In the demonstrated filter, every message where the selector is \lstinline|getNextMove| matches.
 If an asterisk~(\lstinline|*|) is used in the target, every target will match.
-When the condition part and the matching part are true, the message is substituted with the values provided in the substitution part.
+If the condition part and the matching part are true, the message is substituted with the values provided in the substitution part.
 How these values are substituted, and how the message continues, depends on the type of  filter used.
 \newpage
-At the moment there are four basic filter types defined in \Compose*.
+At the moment, there are four basic filter types defined in \Compose*.
 It is, however, possible to write custom filter types.
 \begin{description}[style=sameline,leftmargin=18mm]
   \item[Dispatch] If the message is accepted, it is dispatched to the specified target of the message, otherwise the message continues to the subsequent filter.

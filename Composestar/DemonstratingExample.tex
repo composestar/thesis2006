@@ -1,4 +1,3 @@
-\newpage
 \section{Demonstrating Example}
 \label{sec:demonstratingexample}
 
@@ -9,13 +8,13 @@ There are, however, four mega vitamins in the maze that make pacman evil.
 In its evil state, pacman can eat ghosts.
 A simple list of requirements for the Pacman game is briefly discussed here:
 \begin{itemize}[noitemsep]
-  \item The number of lives taken from pacman when eaten by a ghost;
+  \item One live is taken from pacman when eaten by a ghost;
   \item A game should end when pacman has no more lives;
   \item The score of a game should increase when pacman eats a vitamin or a ghost;
   \item A user should be able to use a keyboard to move pacman around the maze;
   \item Ghosts should know whether pacman is evil or not;
   \item Ghosts should know where pacman is located;
-  \item Ghosts should, depending on the state of pacman, hunt or flee from pacman.
+  \item Ghosts should hunt or flee from pacman, depending on the state of pacman.
 \end{itemize}
 
 \subsection{Initial Object-Oriented Design}
@@ -26,6 +25,7 @@ A simple list of requirements for the Pacman game is briefly discussed here:
   \caption{Class diagram of the object-oriented Pacman game}
   \label{fig:pacman_class_diagram}
 \end{figure}
+\afterpage{\clearpage}
 
 \nomenclature{UML}{Unified Modeling Language}%
 \autoref{fig:pacman_class_diagram} shows an initial object-oriented design for the Pacman game.
@@ -76,7 +76,7 @@ To implement scoring in the \Compose* language, we divide the implementation int
 The first part is a \Compose* concern definition stating which filter modules to superimpose.
 \autoref{lst:scoringconcern} shows an example \Compose* concern definition of scoring.
 
-\begin{lstlisting}[style=floatlisting,escapeinside={&$}{$&},language=ComposeStar,%
+\begin{lstlisting}[style=listing,escapeinside={&$}{$&},language=ComposeStar,%
                    caption={\expandafter{\lstinline[style=inline]|DynamicScoring|} concern in \Compose*{}},%
                    label={lst:scoringconcern}]
 concern DynamicScoring in Pacman {&$\label{line:dynscore_concern}$&

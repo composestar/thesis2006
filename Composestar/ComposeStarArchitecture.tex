@@ -19,29 +19,28 @@ The creation of a build configuration can be done manually or by using a plug-in
 Examples of these plug-ins are the Visual Studio add-in for \Compose*[.NET] and the Eclipse plug-in for \Compose*[J] and \Compose*[C].
 
 \subsection{Compile Time}
-The compile time layer is platform independent and reasons about the correctness of the composition filter implementation with respect to the program which allows the target program to be build by the adaptation.
+The compile time layer is platform independent and reasons about the correctness of the composition filter implementation with respect to the program. This allows the target program to be build by the adaptation.
 
 The compile time `pre-processes' the composition filter specifications by parsing the specification, resolving the references, and checking its consistency.
-To provide an extensible architecture to facilitate this process a blackboard architecture is chosen.
-This means that the compile time uses a general knowledgebase that is called the `repository'.
-This knowledgebase contains the structure and metadata of the program which different modules can execute their activities on.
+To provide an extensible architecture to facilitate this process, a blackboard architecture is chosen.
+This means that the compile time uses a general knowledge base, which is called the `repository'.
+This knowledge base contains the structure and metadata of the program. Different modules can use this knowledge base to execute their activities.
 Examples of modules within analysis and validation are the three modules SANE, LOLA and FILTH.
 These three modules are responsible for (some) of the analysis and validation of the super imposition and its selectors.
 
 \subsection{Adaptation}
 The adaptation layer consists of the program manipulation, harvester, and code generator.
 These components connect the platform independent compile time to the target platform.
-The harvester is responsible for gathering the structure and the annotations within the source program and adding this information to the knowledgebase.
-The code generation generates a reduced copy of the knowledgebase and the weaving specification.
-This weaving specification is then used by the weaver contained by the program manipulation to weave in the calls to the runtime into the target program.
-The end result of the adaptation the target program which interfaces wit the runtime.
+The harvester is responsible for gathering the structure and the annotations within the source program and adding this information to the knowledge base.
+The code generation generates a reduced copy of the knowledge base and the weaving specification.
+This weaving specification is then used by the weaver, which is contained in the program manipulation component, to weave in the calls to the runtime into the target program.
+The end result of the adaptation layer is the woven target program. This program interfaces with the runtime.
 
 \subsection{Runtime}
-The runtime layer is responsible for executing the concern code at the joinpoints.
-It is activated at the joinpoints by function calls that are woven in by the weaver.
-A reduced copy of the knowledgebase containing the necessary information for filter evaluation and execution is enclosed with the runtime.
-When the function is filtered the filter is evaluated.
-Depending on if the the condition part evaluates to true, and the matching part matches the accept or reject behavior of the filter is executed.
+The runtime layer is responsible for executing the concern code at the join points.
+It is activated at the join points by function calls that are woven in by the weaver.
+A reduced copy of the knowledge base, containing the necessary information for filter evaluation and execution, is enclosed with the runtime.
+Method calls are intercepted by the runtime. The runtime evaluates the filter set for the intercepted message and executes the corresponding filter actions.
 The runtime also facilitates the debugging of the composition filter implementations.
 
 \section{Platforms}
@@ -50,7 +49,7 @@ Currently, \Compose* supports three platforms: \dotNET, Java and C\@.
 For each platform different tools are used for compilation and weaving.
 They all share the same platform independent compile-time.
 
-\Compose*[.NET] targets the \dotNET platform and is the oldest implementation of \Compose*.
+\Compose*[.NET] targets the \dotNET platform. It is the oldest implementation of \Compose*.
 Its weaver operates on CIL byte code.
 \Compose*[.NET] is programming language independent as long as the programming language can be compiled to CIL code.
 An add-in for Visual Studio is provided for ease of development.

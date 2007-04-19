@@ -143,22 +143,22 @@ Making modifications to a tangled concern class requires checking for side-effec
 
 \section{AOP Approach}
 
-To solve the problems with crosscutting, several techniques are being researched that attempt to increase the expressiveness of the OO paradigm.
+To solve the problems with crosscutting, several techniques are being investigated that attempt to increase the expressiveness of the OO paradigm.
 Aspect-Oriented Programming (AOP) introduces a modular structure, the aspect, to capture the location and behavior of crosscutting concerns.
 Examples of Aspect-Oriented languages are Sina, AspectJ, Hyper/J, and \Compose*.
 A special syntax is used to specify aspects and the way in which they are combined with regular objects.
-The fundamental goals of AOP are twofold~\cite{gradecki:maj03}: first to provide a mechanism to express concerns that crosscut other components.
-Second to use this description to allow for the separation of concerns.
+The fundamental goals of AOP are twofold~\cite{gradecki:maj03}: first, to provide a mechanism to express concerns that crosscut other components.
+Second, to use this description to allow for the separation of concerns.
 
-\emph{Joinpoints} are well-defined places in the structure or execution flow of a program where additional behavior can be attached.
-The most common joinpoints are method calls.
-\emph{Pointcuts} describe a set of joinpoints.
+\emph{Join points} are well-defined places in the structure or execution flow of a program where additional behavior can be attached.
+The most common join points are method calls.
+\emph{Pointcuts} describe a set of join points.
 This allows us to execute behavior at many places in a program by one expression.
-\emph{Advice} is the behavior executed at a joinpoint.
+\emph{Advice} is the behavior executed at a join point.
 
 In the example of \autoref{lst:calc_aspects} the class \lstinline|Add| does not contain any tracing code and only implements the addition concern.
 Class \lstinline|CalcDisplay| also does not contain tracing code.
-In our example the tracing aspect contains all the tracing code.
+In our example, the tracing aspect contains all the tracing code.
 The pointcut \lstinline|tracedCalls| specifies at which locations tracing code is executed.
 
 \begin{lstsub}
@@ -230,7 +230,7 @@ This approach is followed by e.g. AspectJ (covered in more detail in the next se
 \nomenclature{CIL}{Common Intermediate Language}%
 The integration of components and aspects is called \emph{aspect weaving}.
 There are three approaches to aspect weaving.
-The first and second approach rely on adding behavior in the program, either by weaving the aspect in the source code, or by weaving directly in the target language.
+The first and second approach rely on adding behavior to the program, either by weaving the aspect in the source code, or by weaving directly in the target language.
 The target language can be intermediate language (IL) or machine code.
 Examples of IL are Java byte code and Common Intermediate Language (CIL).
 The remainder of this chapter considers only intermediate language targets.
@@ -243,12 +243,12 @@ Each method is explained briefly in the following sections.
 The source code weaver combines the original source with aspect code.
 It interprets the defined aspects and combines them with the original source, generating input for the native compiler.
 For the native compiler there is no difference between source code with and without aspects.
-Hereafter the compiler generates an intermediate or machine language output (depending on the compiler-type).
+Hereafter, the compiler generates an intermediate or machine language output (depending on the compiler-type).
 
 The advantages of using source code weaving are:
 \begin{description}[style=nextline,noitemsep]
   \item[High-level source modification] Since all modifications are done at source code level, there is no need to know the target (output) language of the native compiler;
-  \item[Aspect and original source optimization] First the aspects are woven into the source code and hereafter compiled by the native compiler.
+  \item[Aspect and original source optimization] First, the aspects are woven into the source code. Then, the source code is compiled by the native compiler.
        The produced target language has all the benefits of the native compiler optimization passes.
        However, optimizations specific to exploiting aspect knowledge are not possible;
   \item[Native compiler portability] The native compiler can be replaced by any other compiler as long as it has the same input language.
@@ -265,8 +265,8 @@ However, the drawbacks of source code weaving are:
 \subsubsection{Intermediate Language Weaving}
 \label{sec:intermediate_language_weaving}
 
-Weaving aspects through an intermediate language gives more control over the executable program and solves some issues as identified in \autoref{sec:source_code_weaving} on source code weaving.
-Weaving at this level allows for creating combinations of intermediate language constructs that can not be expressed at the source code level.
+Weaving aspects through an intermediate language gives more control over the executable program and solves some issues, as identified in \autoref{sec:source_code_weaving} on source code weaving.
+Weaving at this level allows for creating combinations of intermediate language constructs that cannot be expressed at the source code level.
 Although IL can be hard to understand, IL weaving has several advantages over source code weaving:
 \begin{description}[style=nextline,noitemsep]
   \item[Programming language independence] All compilers generating the target IL output can be used;
@@ -288,7 +288,7 @@ However, IL weaving also has drawbacks that do not exist for source code weaving
 
 \nomenclature{VM}{Virtual Machine}%
 Adapting the virtual machine (VM) removes the need to weave aspects.
-This technique has the same advantages as intermediate language weaving and can also overcome some of its disadvantages as mentioned in \autoref{sec:intermediate_language_weaving}.
+This technique has the same advantages as intermediate language weaving and can also overcome some of the disadvantages of intermediate language weaving, mentioned in \autoref{sec:intermediate_language_weaving}.
 Aspects can be added without recompilation, redeployment, and restart of the application~\cite{popovici:aosd02,popovici:aosd03}.
 
 Modifying the virtual machine also has its disadvantages:
