@@ -40,19 +40,21 @@ The classes in this diagram are:
 	\item[Game] This class encapsulates the control flow and controls the state of a game;
 	\item[GameElement] This is the base class for all, with the exception of the pills, visual elements 
 		in the game. A \lstinline|GameElement| has a position within the maze and a collision radius;
-	\item[Ghost] This class is a representation of a ghost chasing Pac-Man. Each ghost has an identifier that can be
-		used to change the behavior for individual ghosts;	
+	\item[Ghost] This class is a representation of a ghost chasing Pac-Man. Each ghost has an identifier
+	  that can be used to change the behavior for individual ghosts;	
 	\item[HumanController] The \lstinline|HumanController| is an abstract controller class that receives movement 
 		instructions from a user;
 	\item[KeyboardController] The \lstinline|KeyboardController| is an implementation of the \lstinline|HumanController|
 	  that reads the instructions from the keyboard;			
 	\item[Level] This class contains the structural information of the maze, this includes information about the walls,
-		location of the pills, and starting locations of Pac-Man and the ghosts;
+		location of the pills, and starting locations of Pac-Man and the ghosts. It contains methods to check for, and eat
+		the pills in the maze. It also has method to check for walls in a given direction;
 	\item[Pacman] This is a representation of the user controlled pawn in the game. It contains a flag that tells if
-		the Pac-Man is in evil mode;	
+		the Pac-Man is in evil mode;
 	\item[Pawn] The \lstinline|Pawn| class is used for all non stationary \lstinline|GameElement|s. Pawns are 
 		controlled by an instance of the \lstinline|Controller| class. It has a speed, direction and number of lives.
-		The pawn performs collision checks after every move and acts accordingly;
+		The pawn performs collision checks after every move and acts accordingly. A pawn will continue moving in the
+		set direction with the given speed until these parameters have been changed;
 	\item[RandomMovement] The \lstinline|RandomMovement| class returns a random direction the given pawn can move to;
 	\item[Strategy] This class is used by the \lstinline|AIController| to make a movement choice;
 	\item[View] \lstinline|GameElement|s are drawn on the \lstinline|Viewport| using a \lstinline|View| implementation 
@@ -82,7 +84,7 @@ This concern involves a number of events.
 The score should be updated whenever Pac-Man eats a pill, power pill or ghost.
 And the score itself has to be drawn on the screen to relay it back to the user.
 These events scatter over multiple classes: \lstinline|Level| (updating score), \lstinline|Ghost| (updating score), \lstinline|Viewport| (drawning score).
-Thus scoring is an example of a crosscutting concern. 
+Thus scoring is an example of a crosscutting concern where only new behavior is added without changing the original behavior of the program.
 
 To implement scoring in the \Compose* language, we divide the implementation into two parts.
 The first part is a \Compose* concern definition stating which filter modules to superimpose.
@@ -134,7 +136,10 @@ concern Scoring in PacmanTwo&$\label{line:scoring_concern}$&
 
 This concern definition is called \lstinline|Scoring| (line~\ref{line:scoring_concern}) and contains two parts.
 The first part is the declaration of the filter modules called \lstinline|registerScorePawns| (lines~\ref{line:scoring_fm_rsp}--\ref{line:scoring_fm_rsp_end}), \lstinline|registerScoreLevel| (lines~\ref{line:scoring_fm_rsl}--\ref{line:scoring_fm_rsl_end}), and \lstinline|renderScore| (lines~\ref{line:scoring_fm_rs}--\ref{line:scoring_fm_rs_end}).
-The first two filter modules \lstinline|registerScorePawns| and \lstinline|registerScoreLevel| will update the current score. When Pac-Man eats a ghost the \lstinline|died| method will be called on the \lstinline|Ghost|. The filter module \lstinline|registerScorePawns| contains an \emph{after filter} called \lstinline|scored| (line~\ref{line:scoring_fm_rsp_scored}). This filter will send a message to the \lstinline|Score| instance after the \lstinline|died| method has been called. The \lstinline|registerScoreLevel| filter module contains a similar filter for the \lstinline|eatPill| and \lstinline|eatPowerPill| methods.
+The first two filter modules \lstinline|registerScorePawns| and \lstinline|registerScoreLevel| will update the current score. When Pac-Man eats a ghost the \lstinline|died| method will be called on the \lstinline|Ghost|. 
+The filter module \lstinline|registerScorePawns| contains an \emph{after filter} called \lstinline|scored| (line~\ref{line:scoring_fm_rsp_scored}). 
+This filter will send a message to the \lstinline|Score| instance after the \lstinline|died| method has been called. 
+The \lstinline|registerScoreLevel| filter module contains a similar filter for the \lstinline|eatPill| and \lstinline|eatPowerPill| methods.
 The filter module \lstinline|renderScore| contains an\emph{after filter} that will send a message to the \lstinline|renderScore| method of a \lstinline|ScoreView| instance after the \lstinline|renderAll| method of \lstinline|Viewport| has been called.
 The final part of the concern definition is the superimposition part (lines~\ref{line:scoring_si}--\ref{line:scoring_si_end}).
 This part defines that the previously defined filter modules \lstinline|dynamicscoring| are to be superimposed on the selected classes.
@@ -142,8 +147,12 @@ This part defines that the previously defined filter modules \lstinline|dynamics
 The final part of the scoring concern is the so-called \emph{implementation part}.
 This part is defined by the classes \lstinline|Score| and \lstinline|ScoreView|.
 \autoref{lst:score_impl} shows an example implementation of class \lstinline|Score| and \autoref{lst:scoreview_impl} shows an example implementation of class \lstinline|ScoreView|.
-An instance of \lstinline|Score| will receive messages send by the \lstinline|scored| filters in the \lstinline|registerScorePawns| and \lstinline|registerScoreLevel| filter modules. The \lstinline|Score| instance will subsequently perform the events related to the scoring concern. The \lstinline|Score| instances is declared as \emph{external} and therefor both filter modules will use the same instance of this class.
-A \lstinline|ScoreView| instance will render the current score, as stored in the global \lstinline|Score| instance, on the \lstinline|Graphics| instance that was passed as an argument of the original method call.
+An instance of \lstinline|Score| will receive messages send by the \lstinline|scored| filters in the \lstinline|registerScorePawns| and \lstinline|registerScoreLevel| filter modules. 
+The \lstinline|Score| instance will subsequently perform the events related to the scoring concern. The \lstinline|Score| instances is declared as \emph{external} and therefor both filter modules will use the same instance of this class.
+A \lstinline|ScoreView| instance will render the current score, as stored in the global \lstinline|Score| instance, on the \lstinline|Graphics| instance that was passed as an argument of the original method call. 
+The \lstinline|JoinPointContext| argument that is passed to the \lstinline|renderScore| method contains information about the join point where the message was intercepted. 
+It provides access to the various properties of a message like the sender and target, but also provides access to the arguments and result of the method that was called. 
+This allows methods called by, for example, the after filter to change the result or use the function arguments for additional processing. For the scoring concern the \lstinline|JoinPointContext| is only used to get access to the \lstinline|Graphics| instance to draw the score on.
 
 \begin{lstlisting}[style=floatlisting,language=Java,%
                    caption={Implementation of class \expandafter{\lstinline[style=inline]|Score|}},%
@@ -152,65 +161,53 @@ package PacmanTwo.Scoring;
 
 import Composestar.StarLight.ContextInfo.JoinPointContext;
 
-public class Score
-{
-	protected static Score _instance;
+public class Score {
+	public static final int POINTS_PILL       = 10;
+	public static final int POINTS_POWERPILL  = 50;
+	public static final int POINTS_GHOST      = 200;
 
+	protected static Score _instance;	
 	protected int currentScore;
-
-	public static final int POINTS_PILL			= 10;
-	public static final int POINTS_POWERPILL	= 50;
-	public static final int POINTS_GHOST		= 200;
-
 	protected int ghostEatCount = 0;
 
-	protected Score()
-	{
+	protected Score()	{
 		reset();
 	}
 
-	public void reset()
-	{
-		currentScore = 0;
-	}
-
-	public int getScore()
-	{
-		return currentScore;
-	}
-
-	public void setScore(int inval)
-	{
-		currentScore = inval;
-	}
-
-	public void addScore(int inval)
-	{
-		currentScore += inval;
-	}
-
-	public static Score instance()
-	{
+	public static Score instance()	{
 		if (_instance == null) _instance = new Score();
 		return _instance;
 	}
-
-	public void eatPill(JoinPointContext jpc)
-	{
-		ghostEatCount = 0;
-		currentScore += POINTS_PILL;
+	
+	public void reset()	{
+		currentScore = 0;
 	}
 
-	public void eatPowerPill(JoinPointContext jpc)
-	{
-		ghostEatCount = 0;
-		currentScore += POINTS_POWERPILL;
+	public int getScore()	{
+		return currentScore;
 	}
 
-	public void pawnDied(JoinPointContext jpc)
-	{
+	public void setScore(int inval)	{
+		currentScore = inval;
+	}
+
+	public void addScore(int inval)	{
+		currentScore += inval;
+	}
+
+	public void eatPill(JoinPointContext jpc)	{
+		ghostEatCount = 0;
+		addScore(POINTS_PILL);
+	}
+
+	public void eatPowerPill(JoinPointContext jpc)	{
+		ghostEatCount = 0;
+		addScore(POINTS_POWERPILL);
+	}
+
+	public void pawnDied(JoinPointContext jpc)	{
 		ghostEatCount = Math.min(4, ghostEatCount+1);
-		currentScore += (POINTS_GHOST * ghostEatCount);
+		addScore(POINTS_GHOST * ghostEatCount);
 	}
 }
 \end{lstlisting}
@@ -224,17 +221,14 @@ import java.awt.Graphics;
 import java.awt.Color;
 import Composestar.StarLight.ContextInfo.JoinPointContext;
 
-public class ScoreView
-{
+public class ScoreView {
 	protected Score score;
 
-	public ScoreView()
-	{
+	public ScoreView() {
 		score = Score.instance();
 	}
 
-	public void renderScore(JoinPointContext jpc)
-	{
+	public void renderScore(JoinPointContext jpc) {
 		Graphics g = (Graphics)jpc.GetArgumentValue((short)0);
 		g.setColor(Color.YELLOW);
 		g.drawString("Score:", 492, 40);
@@ -248,8 +242,8 @@ public class ScoreView
 The second system requirement that we need to implement is the dynamic strategy of ghosts.
 This means that a ghost should, depending on the state of Pac-Man, hunt or flee.
 We can implement this concern by using the strategy design pattern.
-However, in this way, we need to modify the existing code.
-This is not the case when we use \Compose*{} \emph{dispatch and send filters}.
+However, this would require us to modify the existing code.
+This is not the case when we use \Compose*{} with \emph{dispatch} and \emph{send filters}.
 \autoref{lst:dynamicstrategyconcern} demonstrates this. 
 Two new \lstinline|Strategy| implementations have been added to perform the actual decision making. The \lstinline|Stalker| strategy will find the best direction toward Pac-Man, and the \lstinline|Flee| strategy will find the best direction away from Pac-Man.
 
@@ -289,27 +283,39 @@ concern DynamicStrategy in PacmanTwo
 }
 \end{lstlisting}
 
-This concern modifies three parts of the \lstinline|AIController| based on the ghost they are controlling and if Pac-Man is in evil mode. Every time a ghost enters a new cell of the maze is will ponder if it should change direction or simply continue in the same direction. By default it will only make a new decision at a given interval or when it bumped into a wall. Not all ghosts are equal: one ghost is very smart, one is smart, and the other two are not smart at all. 
-The \lstinline|smarty| filter (line~\ref{line:dynstrat_smarty}) will make sure the very smart ghost will always make a new decision when it enters a new cell. The \lstinline|setstrat| filter (line~\ref{line:dynstrat_setstrat}) will modify the movement strategy. If Pac-Man is not evil and if the ghost is smart or very smart (line~\ref{line:dynstrat_setstrat1}) it will redirect the movement decision to the \lstinline|Stalker| strategy. If Pac-Man is evil (line~\ref{line:dynstrat_setstrat2}) it will redirect the decision to the \lstinline|Flee| strategy.
+This concern modifies three parts of the \lstinline|AIController| based on the ghost they are controlling and if Pac-Man is in evil mode. 
+Every time a ghost enters a new cell of the maze is will ponder if it should change direction or simply continue in the same direction, this is done in the \lstinline|ponder| method of the \lstinline|AIController|. 
+By default it will only make a new decision at a given interval or when it bumped into a wall. 
+Not all ghosts are equal: one ghost is very smart, one is just smart, and the other two are not smart at all. 
+The \lstinline|smarty| filter (line~\ref{line:dynstrat_smarty}) will make sure the very smart ghost will always make a new decision when it enters a new cell. 
+The \lstinline|setstrat| filter (line~\ref{line:dynstrat_setstrat}) will modify the movement strategy. 
+If Pac-Man is not evil and if the ghost is smart or very smart (line~\ref{line:dynstrat_setstrat1}) it will redirect the movement decision to the \lstinline|Stalker| strategy. 
+If Pac-Man is evil (line~\ref{line:dynstrat_setstrat2}) it will redirect the decision to the \lstinline|Flee| strategy.
 
-In the end the very smart ghost will be on Pac-Man's heels, the smart ghost will try to move in Pac-Man's direction but not as well as the very smart ghost does. The other two ghosts will move in a random direction. When Pac-Man is evil all ghosts will flee from Pac-Man, the very smart ghost will perform best in fleeing from Pac-Man.
+In the end the very smart ghost will be on Pac-Man's heels, the smart ghost will try to move in Pac-Man's direction but not as well as the very smart ghost does. 
+The other two ghosts will move in a random direction. 
+When Pac-Man is evil all ghosts will flee from Pac-Man, the very smart ghost will perform best in fleeing from Pac-Man because it will ponder for a new move in every cell of the maze.
 
 \subsubsection{Implementation of the Bonus Pickup}
 \label{sec:ImplementationOfTheBonusPickup}
 
-The last system requirement is an example of a large cross cutting concern that needs to add behavior to almost all major components of the game.
+The last system requirement is an example of a large cross cutting concern that needs to add behavior to various major components of the game.
 The behavior of the bonus pickup is as follows:
 \begin{enumerate}[noitemsep]
 	\samepage
-	\item The bonus pick up will be placed in the level after a set delay;
+	\item The bonus pick up will be placed in the maze after a set delay;
 	\item A second bonus pick up is placed after a set delay after the first bonus was picked up;	
+	\item There are only two pick ups per maze.
 	\item Only Pac-Man can pick up the bonus, ghosts will ignore it;
-	\item The number of points scored for the bonus will increase every level;
-	\item The bonus is rendered differently depending on the level.
+	\item The number of points scored for the bonus will increase every new maze;
+	\item The bonus is rendered differently depending on the points that can be scored by picking it up.
 \end{enumerate}
 
-A few new classes will need to be introduced. First, a new \lstinline|GameElement| called \lstinline|BonusPickup| is needed to represent the bonus pick in the maze. And a new \lstinline|View| called \lstinline|BonusView| is needed to render the \lstinline|BonusPickup| on the screen.
-In order to implement the new behavior certain messages need to be intercepted, as shown in \autoref{lst:bonusconcern}. The overall management of the bonus behavior is handled by the singleton class \lstinline|Bonus|.
+A few new classes will need to be introduced. 
+First, a new \lstinline|GameElement| called \lstinline|BonusPickup| is needed to represent the bonus pick in the maze. 
+And a \lstinline|View| subclass called \lstinline|BonusView| is needed to render the \lstinline|BonusPickup| on the screen.
+In order to implement the new behavior certain messages need to be intercepted, as shown in \autoref{lst:bonusconcern}. 
+The overall management of the bonus behavior is handled by the singleton class \lstinline|Bonus|.
 
 \begin{lstlisting}[style=floatlisting,escapeinside={&$}{$&},language=Composestar,%
                    xrightmargin=-25mm,%
@@ -366,8 +372,22 @@ concern BonusConcern in PacmanTwo
 }
 \end{lstlisting}
 
-The first (lines~\ref{line:bonus_bonusmanager}--\ref{line:bonus_bonusmanager_end}) event the bonus has to react on is the \lstinline|startNewGame| in the \lstinline|Game| class. The \lstinline|Bonus| class will use this even to initialize the bonus management and start the timer for placing the \lstinline|BonusPickup|. The \lstinline|tick| event is also intercepted to update the timer in the \lstinline|Bonus| class. When the timer reaches zero the bonus manager will add a \lstinline|BonusPickup| to the current game.
-Next the game has to react on Pac-Man touching the \lstinline|BonusPickup| (lines~\ref{line:bonus_touchbonus}--\ref{line:bonus_touchbonus_end}). Because \lstinline|BonusPickup| is a stationary element it will not check if it has been touched by an other element. Therefor this check will have to performed differently. The \lstinline|touch| on Pac-Man will be forwarded to the \lstinline|pacmanTouch| method of the \lstinline|Bonus|. This method should check if the touched \lstinline|GameElement| is an instance of \lstinline|BonusPickup| because the same event will be triggered when Pac-Man touches any other \lstinline|GameElement| instance. \lstinline|pacmanTouch| will, if the \lstinline|BonusPickup| was touched, update the score, and reset the timer for the next bonus. For the registration of the score the \lstinline|Score| class that was introduced in \ref{sec:scoring_concern}.
-The third filter module (lines~\ref{line:bonus_registerbonusview}--\ref{line:bonus_registerbonusview_end}) will act on the \lstinline|createViews| method of \lstinline|Viewport|. This event will be called when the views for all game elements are registered. \lstinline|Bonus| will use this to register the \lstinline|BonusView| with the \lstinline|Viewport| instance so that the \lstinline|BonusPickup| will also be rendered on the maze.
-An other requirement for the bonus pickup is that the bonus reacts to level changes in order to change the shape of the \lstinline|BonusPickup| and the number of points gained from picking it up. To keep track of the current level number a level counter is used in the \lstinline|Bonus| class that is reset by the \lstinline|startGame| method. The \lstinline|LevelUp| filter module (lines~\ref{line:bonus_levelup}--\ref{line:bonus_levelup_end}) intercepts the \lstinline|getNewMaze| of the \lstinline|Level| class, this method is called when a new level is created. When the \lstinline|getNewMaze| method was called the bonus manager will increase the level counter. When the next bonus pickup is created it will reflect the current level number.
+The first (lines~\ref{line:bonus_bonusmanager}--\ref{line:bonus_bonusmanager_end}) event the bonus has to react on is the \lstinline|startNewGame| in the \lstinline|Game| class. 
+The \lstinline|Bonus| class will use this even to initialize the bonus management and start the timer for placing the first \lstinline|BonusPickup|. 
+The \lstinline|tick| event is also intercepted to update the timer in the \lstinline|Bonus| class. 
+When the timer reaches zero the bonus manager will the \lstinline|BonusPickup| to the current maze.
+Next the game has to react on Pac-Man touching the \lstinline|BonusPickup| (lines~\ref{line:bonus_touchbonus}--\ref{line:bonus_touchbonus_end}). 
+Because \lstinline|BonusPickup| is a stationary element it will not check if it has been touched by an other element, therefor the touching check has to be performed elsewhere.
+The \lstinline|touch| on Pac-Man will be forwarded to the \lstinline|pacmanTouch| method of the \lstinline|Bonus|. 
+This method should check if the touched \lstinline|GameElement| is an instance of \lstinline|BonusPickup| because the same event will be triggered when Pac-Man touches any other \lstinline|GameElement| instance. 
+\lstinline|pacmanTouch| will, if the \lstinline|BonusPickup| was touched, update the score, and reset the timer for the second bonus. 
+For the registration of the score the \lstinline|Score| class that was introduced in \ref{sec:scoring_concern}.
+The \lstinline|Score| singleton class will simply be reused for the scoring.
+The third filter module (lines~\ref{line:bonus_registerbonusview}--\ref{line:bonus_registerbonusview_end}) will act on the \lstinline|createViews| method of \lstinline|Viewport|. 
+This event will be called when the views for all game elements are registered, standard only \lstinline|View| classes for Pac-Man and the ghosts are registered.
+\lstinline|Bonus| will use this to register the \lstinline|BonusView| with the \lstinline|Viewport| instance so that the \lstinline|BonusPickup| will also be rendered on the maze.
+An other requirement for the bonus pickup is that the bonus reacts to maze changes in order to change the shape of the \lstinline|BonusPickup| and the number of points gained from picking it up. 
+To keep track of the current maze number a level counter is used in the \lstinline|Bonus| class that is reset by the \lstinline|startGame| method. The \lstinline|LevelUp| filter module (lines~\ref{line:bonus_levelup}--\ref{line:bonus_levelup_end}) intercepts the \lstinline|getNewMaze| of the \lstinline|Level| class, this method is called when a new level is created. 
+When the \lstinline|getNewMaze| method was called the bonus manager will increase the level counter. When the next bonus pickup is created it will reflect the current level number.
 
+With these changes in place the Pac-Man game meets the initially set requirements without modifying the source code of the basic implementation.
